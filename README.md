@@ -37,9 +37,7 @@
 | Doc | Purpose |
 |-----|---------|
 | [`docs/PRIVACY_AND_COMPLIANCE.md`](docs/PRIVACY_AND_COMPLIANCE.md) | HIPAA/PHI/Canada privacy **talk track**, data minimization, production hardening |
-| [`docs/INTERVIEW.md`](docs/INTERVIEW.md) | One-pager: job fit, Zapier vs code, questions to ask |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | **File map, pipeline flow, component explanations** — read this first to understand the project |
-| [`docs/DEMO_WALKTHROUGH_TALKING_POINTS.md`](docs/DEMO_WALKTHROUGH_TALKING_POINTS.md) | **Anju product context** (from public site) + **screen-by-screen demo script** |
 | [`docs/WORKFLOW_DISCOVERY.md`](docs/WORKFLOW_DISCOVERY.md) | As-is vs to-be friction narrative (formerly a Streamlit page) |
 
 ## Quick start
