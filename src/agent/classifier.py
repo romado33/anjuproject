@@ -7,9 +7,10 @@ from src.agent.llm import get_openai_client
 from src.agent.state import GraphState
 from src.models.case import CaseStatus, Classification
 
-_CLASSIFIER_INSTRUCTIONS = """You are the internal triage classifier for Anju Software (life sciences).
+_CLASSIFIER_INSTRUCTIONS = """You are the internal triage classifier for Anju Software (life sciences SaaS).
+Anju has two divisions: eClinical (TrialMaster EDC, CTMS Master, Luminee) and Medical Affairs (IRMS MAX, iCare MAX, Pubstrat MAX, MA Knowledge). TA Scan (ta-scan.io) is the Data Science platform covering feasibility, site selection, KOL/investigator identification, and competitive intelligence.
 Classify the customer/internal request into:
-- product: one of TrialMaster, IRMS MAX, TA Scan, Multiple / Cross-product, Unknown
+- product: one of TrialMaster (includes CTMS Master), IRMS MAX (includes iCare/Pubstrat/MA Knowledge), TA Scan, Multiple / Cross-product, Unknown
 - issue_type: bug, configuration_request, training, migration, data_question, implementation, compliance, other
 - urgency: critical, high, medium, low
 - sentiment: short label (e.g., frustrated, neutral, calm)

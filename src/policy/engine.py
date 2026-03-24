@@ -119,6 +119,23 @@ def _apply_kb_routing_nudges(case: CaseRecord, base: RoutingDecision) -> Routing
                 }
             )
 
+    if (
+        c.product == ProductLine.TA_SCAN
+        and c.issue_type == IssueType.DATA_QUESTION
+        and base.target_team == "TA Data Services"
+    ):
+        if any(k in blob for k in ("kol", "investigator", "feasibility", "site selection", "site capacity")):
+            d = d.model_copy(
+                update={
+                    "escalation_recommended": True,
+                    "reasoning": d.reasoning
+                    + (
+                        " **RAG influence:** KB snippets reference KOL/investigator/feasibility work; "
+                        "escalation recommended for Data Science scoping."
+                    ),
+                }
+            )
+
     if c.issue_type == IssueType.COMPLIANCE and re.search(
         r"\baudit\b|\bvalidation\b|\b21 cfr\b", blob
     ):

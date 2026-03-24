@@ -20,9 +20,9 @@ from src.policy.engine import (
 def _detect_product(text: str) -> ProductLine:
     t = text.lower()
     scores = {
-        ProductLine.TRIALMASTER: len(re.findall(r"trialmaster|edc|clinical trial|phase iii|sdtm|cdisc", t)),
-        ProductLine.IRMS_MAX: len(re.findall(r"irms|medical information|crm|veeva|salesforce|therapeutic area", t)),
-        ProductLine.TA_SCAN: len(re.findall(r"ta scan|competitive|landscape|fda-approved|oncology report", t)),
+        ProductLine.TRIALMASTER: len(re.findall(r"trialmaster|edc|clinical trial|phase iii|sdtm|cdisc|ctms|trial management|svr|site visit report", t)),
+        ProductLine.IRMS_MAX: len(re.findall(r"irms|medical information|crm|veeva|salesforce|therapeutic area|icare|anjubus|msl|medical affairs", t)),
+        ProductLine.TA_SCAN: len(re.findall(r"ta scan|competitive|landscape|fda-approved|oncology report|feasibility|kol|investigator identification|site selection|site capacity", t)),
     }
     best = max(scores.items(), key=lambda x: x[1])
     if best[1] == 0:

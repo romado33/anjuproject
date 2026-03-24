@@ -47,20 +47,24 @@ SCENARIOS: list[DemoScenario] = [
     DemoScenario(
         key="irms_crm",
         title="IRMS MAX — CRM routing configuration",
-        description="Medical information + CRM integration",
+        description="Medical information + Veeva/Salesforce CRM integration",
         request_text=(
             "We need to add a new therapeutic area in IRMS MAX and update the medical "
             "inquiry routing rules so requests route to the correct MSL pod. We use "
-            "Salesforce as our CRM and need activities mirrored for compliance."
+            "Veeva CRM (Salesforce-based) and need activities mirrored bi-directionally "
+            "via the AnjuBUS adapter for compliance. Also confirm iCare MAX portal "
+            "content reflects the new TA."
         ),
     ),
     DemoScenario(
         key="ta_scan",
-        title="TA Scan — custom competitive report",
-        description="Data services scoping + delivery",
+        title="TA Scan — feasibility + KOL identification",
+        description="Data services scoping: site selection, KOL, competitive intelligence",
         request_text=(
-            "Can TA Scan provide a custom competitive landscape for FDA-approved oncology "
-            "therapies in the US and EU from the last 18 months, delivered via API weekly? "
+            "We need TA Scan support for a Phase III oncology feasibility study: "
+            "competitive landscape for FDA-approved therapies in the US and EU from the "
+            "last 18 months, site capacity analysis for top-enrolling sites, and KOL "
+            "identification for our advisory board. Can this be delivered via API weekly? "
             "Please scope effort and timeline."
         ),
     ),

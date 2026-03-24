@@ -1,12 +1,24 @@
 # Internal routing rules — Anju operations
 
+## Divisional structure
+
+Anju operates two divisions, each with a General Manager:
+- **eClinical Division** (Tim Lyons): TrialMaster, CTMS Master, Luminee
+- **Medical Affairs Division** (Reed McLaughlin): IRMS MAX, iCare MAX, Pubstrat MAX, MA Knowledge
+- **Data Science** (TA Scan): Operates across both divisions; has its own brand at ta-scan.io
+
+Routing should align with divisional ownership.
+
 ## Team ownership matrix (illustrative)
 
 | Product / domain | Primary team | Escalation |
 |------------------|--------------|------------|
 | TrialMaster | eClinical-Support | eClinical-Engineering |
+| CTMS Master | eClinical-Support | eClinical-Engineering |
 | IRMS MAX | MI-Support | MI-Integrations |
-| TA Scan | TA-Support | TA-Platform |
+| iCare MAX / MA Knowledge | MI-Support | MI-Integrations |
+| Pubstrat MAX | MI-Support | MA-Content-Ops |
+| TA Scan | TA-Support | TA-DataServices / TA-Platform |
 | Cross-product | Program-Management | Executive-Sponsor |
 
 ## Urgency

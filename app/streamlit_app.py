@@ -50,7 +50,7 @@ def main() -> None:
 
     st.sidebar.markdown("---")
     st.sidebar.markdown(
-        "**Mock adapters:** Jira · Teams · Salesforce · NetSuite · BambooHR · Wiki checklist"
+        "**Mock adapters:** Jira · Teams · Salesforce / Veeva CRM · NetSuite · BambooHR · Wiki checklist"
     )
 
     st.title("Anju Internal Case Router")

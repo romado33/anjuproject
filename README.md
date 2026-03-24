@@ -1,8 +1,8 @@
 # Anju Internal Case Router
 
-**Case-to-action automation** across internal systems for **life sciences SaaS operations** (support, professional services, compliance, customer ops — not ticket triage alone): classify inbound work, retrieve product/process context (**RAG when policy says so**), apply **deterministic routing and selective actions**, propose **AnjuBUS-style adapter invocations** (Jira, Teams, Salesforce, NetSuite, BambooHR, internal checklist), and enforce **human-in-the-loop approval** before mock execution.
+**Case-to-action automation** across internal systems for **life sciences SaaS operations** (support, professional services, compliance, customer ops — not ticket triage alone): classify inbound work, retrieve product/process context (**RAG when policy says so**), apply **deterministic routing and selective actions**, propose **AnjuBUS-style adapter invocations** (Jira, Teams, Salesforce/Veeva CRM, NetSuite, BambooHR, internal checklist), and enforce **human-in-the-loop approval** before mock execution.
 
-**Scope:** This automates **internal** work *around* products like TrialMaster, IRMS MAX, and TA Scan (support, PS, handoffs)—not clinical data pipelines. See [`docs/PRIVACY_AND_COMPLIANCE.md`](docs/PRIVACY_AND_COMPLIANCE.md).
+**Scope:** This automates **internal** work *around* products like TrialMaster, CTMS Master, IRMS MAX, TA Scan (ta-scan.io), and the Medical Affairs suite (support, PS, handoffs) — not clinical data pipelines. See [`docs/PRIVACY_AND_COMPLIANCE.md`](docs/PRIVACY_AND_COMPLIANCE.md).
 
 ---
 
@@ -89,8 +89,14 @@ pytest
 
 Unstructured request → **restricted gate** (optional) → **classification** (LLM when allowed) → **RAG** (only when policy says so) → **deterministic routing + action matrix** → **human approval** → **mock adapter execution** with full audit logging.
 
-Adapters are intentionally **mocked** but follow a registry pattern analogous to extending **AnjuBUS** with new endpoints (Jira, Teams, Salesforce, NetSuite, etc.).
+Adapters are intentionally **mocked** but follow a registry pattern analogous to extending **AnjuBUS** with new endpoints (Jira, Teams, Salesforce/Veeva CRM, NetSuite, etc.).
 
+## Interview narrative
+
+- **Product-aware + workflow-aware:** KB references TrialMaster / CTMS Master / IRMS MAX / TA Scan (incl. KOL, feasibility, site selection) / iCare MAX / Pubstrat MAX / MA Knowledge — focus is **internal leverage**, not a product chatbot.  
+- **AI layer** above integration infrastructure (not rip-and-replace).  
+- **Explainability**, **auditability**, and **approval gates** for regulated-adjacent operations.  
+- Maps to CRM / Jira / Teams / ERP / HR systems named in enterprise job descriptions.
 ## License
 
 Demo project — verify licensing before any reuse in production.
