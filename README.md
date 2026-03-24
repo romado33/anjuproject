@@ -36,8 +36,10 @@
 
 | Doc | Purpose |
 |-----|---------|
-| [`docs/PRIVACY_AND_COMPLIANCE.md`](docs/PRIVACY_AND_COMPLIANCE.md) | HIPAA/PHI/Canada privacy **talk track**, data minimization, production hardening |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | **File map, pipeline flow, component explanations** — read this first to understand the project |
+| [`docs/INTERVIEW.md`](docs/INTERVIEW.md) | Interview cheat sheet: one-liner, job fit, org structure, questions to ask |
+| [`docs/DEMO_WALKTHROUGH_TALKING_POINTS.md`](docs/DEMO_WALKTHROUGH_TALKING_POINTS.md) | **Anju product context** (full site scrape) + **screen-by-screen demo script** |
+| [`docs/PRIVACY_AND_COMPLIANCE.md`](docs/PRIVACY_AND_COMPLIANCE.md) | HIPAA/PHI/Canada privacy **talk track**, data minimization, production hardening |
 | [`docs/WORKFLOW_DISCOVERY.md`](docs/WORKFLOW_DISCOVERY.md) | As-is vs to-be friction narrative (formerly a Streamlit page) |
 
 ## Quick start
