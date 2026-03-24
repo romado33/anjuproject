@@ -32,6 +32,10 @@
 3. What **compliance** gates apply to internal automation (ITGC, change control)?
 4. How would they measure **success in 90 days**?
 
+## How to quickly re-learn the codebase
+
+Read `docs/ARCHITECTURE.md` — it has a file map, pipeline flow diagram, and one-liner explanations for every major component. Takes about 5 minutes.
+
 ## If something breaks in the demo
 
 - **No API key:** offline mode—same UI, heuristic routing.

@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-Seed ChromaDB from data/knowledge_base/*.md
+Seed the SQLite vector store from data/knowledge_base/*.md files.
 
 Usage (from project root):
+  $env:PYTHONPATH="."
   python scripts/seed_knowledge_base.py [--reset]
 
-Idempotent: skips if collection already has documents unless --reset.
+Requires OPENAI_API_KEY for embedding generation.
+Idempotent: skips if the store already has documents unless --reset.
 """
 
 from __future__ import annotations

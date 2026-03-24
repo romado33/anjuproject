@@ -44,8 +44,8 @@ st.markdown(
 
 ### Restricted-case gate (heuristic detection)
 
-If inbound text matches high-risk patterns (e.g. adverse event language, subject/patient identifiers, NCT IDs), 
-the pipeline uses **keyword classification + policy actions only** — external models and embedding calls are skipped. 
+If inbound text matches high-risk patterns (e.g. adverse event language, subject/patient identifiers, NCT IDs),
+the pipeline uses **keyword classification + policy actions only** — external models and embedding calls are skipped.
 In production this would be **data classification + DLP**, not regular expressions alone.
 """
 )

@@ -5,11 +5,11 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Literal
-
-RedactionPolicy = Literal["standard", "strict"]
 from uuid import uuid4
 
 from pydantic import BaseModel, Field, field_validator
+
+RedactionPolicy = Literal["standard", "strict"]
 
 
 def utc_now() -> datetime:

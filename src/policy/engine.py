@@ -13,7 +13,6 @@ from typing import Any
 from src.models.case import (
     ActionType,
     CaseRecord,
-    Classification,
     IssueType,
     ProductLine,
     ProposedAction,

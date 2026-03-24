@@ -116,7 +116,7 @@ def test_implementation_routes_to_professional_services() -> None:
 
 
 def test_aggregate_operator_metrics_counts() -> None:
-    from src.models.case import CaseRecord, CaseIntake
+    from src.models.case import CaseIntake, CaseRecord
 
     minimal = CaseIntake(request_text="x" * 40, redact_pii=False)
     # Two synthetic records: one without LLM, one with proposed actions

@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import os
 
-os.environ.pop("OPENAI_API_KEY", None)
+os.environ["OFFLINE_DEMO"] = "true"
+os.environ["OPENAI_API_KEY"] = ""
 
 from src.integrations.registry import get_default_registry
 from src.models.case import ActionType, ProposedAction

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from config.settings import get_settings
 from src.agent.orchestrator import run_agent_pipeline
 from src.integrations.registry import get_default_registry
 from src.models.case import (

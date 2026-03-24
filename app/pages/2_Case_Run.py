@@ -14,11 +14,10 @@ import streamlit as st
 
 from app.ui_theme import inject_theme, page_config
 from config.logging_config import configure_logging
+from config.settings import get_settings
 from src.models.case import ApprovalDecision
 from src.policy.engine import aggregate_operator_metrics, policy_controls_snapshot
 from src.workflow.engine import CaseWorkflowEngine
-
-from config.settings import get_settings
 
 configure_logging(get_settings().log_level)
 page_config("Case run")

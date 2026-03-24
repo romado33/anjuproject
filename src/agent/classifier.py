@@ -7,7 +7,6 @@ from src.agent.llm import get_openai_client
 from src.agent.state import GraphState
 from src.models.case import CaseStatus, Classification
 
-
 _CLASSIFIER_INSTRUCTIONS = """You are the internal triage classifier for Anju Software (life sciences).
 Classify the customer/internal request into:
 - product: one of TrialMaster, IRMS MAX, TA Scan, Multiple / Cross-product, Unknown
