@@ -91,13 +91,6 @@ Unstructured request → **restricted gate** (optional) → **classification** (
 
 Adapters are intentionally **mocked** but follow a registry pattern analogous to extending **AnjuBUS** with new endpoints (Jira, Teams, Salesforce, NetSuite, etc.).
 
-## Interview narrative
-
-- **Product-aware + workflow-aware:** KB references TrialMaster / IRMS MAX / TA Scan–style ops; focus is **internal leverage**, not a product chatbot.  
-- **AI layer** above integration infrastructure (not rip-and-replace).  
-- **Explainability**, **auditability**, and **approval gates** for regulated-adjacent operations.  
-- Maps to CRM / Jira / Teams / ERP / HR systems named in enterprise job descriptions.
-
 ## License
 
 Demo project — verify licensing before any reuse in production.
