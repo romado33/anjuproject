@@ -25,15 +25,7 @@ This repository is a **portfolio / interview demo**. It is **not** certified for
 | **Human-in-the-loop** before mocked “writes” | Case run page (approvals), workflow engine |
 | **Structured audit trail** | `CaseRecord.audit_trail`, export JSON |
 | **Optional PII redaction** before LLM/RAG | `CaseIntake.redact_pii`, `src/utils/pii.py`, `CaseRecord.text_for_llm()` |
-| **Data minimization narrative** | README, this doc |
-
-## What production would add (talk track for interviews)
-
-- Identity: SSO, RBAC, scoped service accounts for Jira / Teams / NetSuite.
-- **DLP** and **entity detection** on inbound text; block or quarantine before external LLM calls when policy requires.
-- **Regional LLM / private hosting** where contractually required.
-- **Retention**, **immutable audit** stores, and **SIEM** export (the JSON export is a toy stand-in).
-- **Validation** where software is used in GxP contexts (separate from this internal-ops demo).
+| **Data minimization narrative** | README, this doc |=
 
 ## Disclaimer
 
