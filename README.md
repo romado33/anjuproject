@@ -46,10 +46,9 @@ Low-code tools excel at linear triggers. This repo shows **typed models**, **eva
 | Document | Purpose |
 |----------|---------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | File map, pipeline, config, UI behavior |
-| [docs/DEMO.md](docs/DEMO.md) | Screen-by-screen demo script |
 | [docs/PRIVACY_AND_COMPLIANCE.md](docs/PRIVACY_AND_COMPLIANCE.md) | Demo-scope privacy and compliance narrative |
 | [docs/WORKFLOW_DISCOVERY.md](docs/WORKFLOW_DISCOVERY.md) | As-is vs to-be operational friction |
-| [docs/INTERVIEW.md](docs/INTERVIEW.md) | Short cheat sheet for discussing the project |
+
 
 ---
 
