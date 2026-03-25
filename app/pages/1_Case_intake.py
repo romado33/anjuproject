@@ -101,12 +101,6 @@ st.title("Case intake")
 kb_status = ensure_kb()
 settings = get_settings()
 offline = settings.use_offline_mode()
-st.markdown(
-    '<div class="workflow-card"><div class="workflow-kpi">Next step</div>'
-    '<div class="workflow-value">Run a sample scenario, then continue to <strong>Review case actions</strong> '
-    "to sign off on proposed actions.</div></div>",
-    unsafe_allow_html=True,
-)
 st.caption(
     "Each scenario run applies **internal policy** automatically (classification, routing, which actions are "
     "proposed, LLM/RAG and restricted-content gates). On **Review case actions**, each case shows how those "
