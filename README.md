@@ -15,8 +15,8 @@
 | **Restricted gate** | Heuristic signals can block external LLM + embeddings; keyword path + same policy |
 | **Modes** | Full (OpenAI) or offline (no API key / `OFFLINE_DEMO`) — shared policy matrix |
 | **RAG** | Chunked Markdown in `data/knowledge_base/`; SQLite + vector retrieval |
-| **UI** | Streamlit: **Home**, **Case intake**, **Review case actions**, **Policy & privacy** (sidebar) |
-| **UI (sidebar & review)** | Home: mock-adapters line + Luminee promo. Review: decision summary, AI/privacy expanders, per-action details, approvals, audit export |
+| **UI** | Streamlit: **Home**, **Case intake**, **Review case actions**, **Integrations**, **Policy & privacy** (sidebar) |
+| **UI (sidebar & review)** | Home: mock-adapters line + Luminee promo. Review: decision summary, AI/privacy expanders, per-action details, approvals, audit export. **Integrations:** adapter endpoints JSON |
 | **Demo data** | Four showcase scenarios + extra scenarios in `src/demo_scenarios.py` |
 | **Audit** | `CaseRecord.audit_trail`; JSON export on Review page |
 | **Tests** | `pytest` — no key required |
@@ -46,9 +46,9 @@ Low-code tools excel at linear triggers. This repo shows **typed models**, **eva
 | Document | Purpose |
 |----------|---------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | File map, pipeline, config, UI behavior |
+| [docs/DEMO.md](docs/DEMO.md) | Screen-by-screen demo script |
 | [docs/PRIVACY_AND_COMPLIANCE.md](docs/PRIVACY_AND_COMPLIANCE.md) | Demo-scope privacy and compliance narrative |
 | [docs/WORKFLOW_DISCOVERY.md](docs/WORKFLOW_DISCOVERY.md) | As-is vs to-be operational friction |
-
 
 ---
 
@@ -88,6 +88,23 @@ streamlit run app/Home.py
 ```powershell
 pytest
 ```
+
+---
+
+## Configuration reference
+
+| Variable | Purpose |
+|----------|---------|
+| `OPENAI_API_KEY` | Enables chat + embedding calls when set |
+| `OFFLINE_DEMO` | `true` forces keyword classification path |
+| `OPENAI_CHAT_MODEL` | Default `gpt-4o` |
+| `OPENAI_EMBEDDING_MODEL` | Default `text-embedding-3-small` |
+| `CLASSIFICATION_CONFIDENCE_THRESHOLD` | Default `0.65` |
+| `CASE_STORE_PATH` | Case SQLite path (default `data/cases.sqlite3`) |
+| `CHROMA_PERSIST_DIRECTORY` | Vector store directory (default `data/chroma_db`) |
+| `LUMINEE_BOOK_DEMO_URL` | Optional; Luminee “Book a demo” link in sidebar (see `config/settings.py` default) |
+| `LUMINEE_PROTOCOL_SUMMARIZER_URL` | Optional; Protocol Summarizer / Hub link in sidebar |
+| `INTEGRATION_SETTINGS_PATH` | JSON file for adapter base URLs/parameters (default `data/integration_settings.json`; gitignored) |
 
 ---
 

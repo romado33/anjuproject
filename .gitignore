@@ -8,6 +8,8 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 data/chroma_db/
+# Local adapter endpoint config (may contain internal hostnames)
+data/integration_settings.json
 *.sqlite3
 *.db
 .DS_Store

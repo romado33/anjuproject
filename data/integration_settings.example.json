@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "adapters": {
+    "jira": {
+      "base_url": "",
+      "enabled": false,
+      "parameters": {},
+      "notes": ""
+    },
+    "teams": {
+      "base_url": "",
+      "enabled": false,
+      "parameters": {},
+      "notes": ""
+    },
+    "salesforce": {
+      "base_url": "",
+      "enabled": false,
+      "parameters": {},
+      "notes": ""
+    },
+    "netsuite": {
+      "base_url": "",
+      "enabled": false,
+      "parameters": {},
+      "notes": ""
+    },
+    "bamboohr": {
+      "base_url": "",
+      "enabled": false,
+      "parameters": {},
+      "notes": ""
+    },
+    "wiki": {
+      "base_url": "",
+      "enabled": false,
+      "parameters": {},
+      "notes": ""
+    }
+  }
+}

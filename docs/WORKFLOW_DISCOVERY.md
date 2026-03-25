@@ -1,6 +1,6 @@
 # Workflow discovery & friction map (reference)
 
-This content was previously a separate Streamlit page; it is kept here as a reference narrative. The live app has **Home** plus **Case intake**, **Review case actions**, and **Policy & privacy** (sidebar). Home is the landing page and adds a short **mock adapters** note plus Luminee promo under the nav; Policy & privacy is **reference** documentation (sidebar page), not a step in the case workflow breadcrumb.
+This content was previously a separate Streamlit page; it is kept here as a reference narrative. The live app has **Home** plus **Case intake**, **Review case actions**, **Integrations**, and **Policy & privacy** (sidebar). Home is the landing page and adds a short **mock adapters** note plus Luminee promo under the nav; Policy & privacy is **reference** documentation (sidebar page), not a step in the case workflow breadcrumb.
 
 ## As-is (illustrative — multi-product SaaS support / ops)
 

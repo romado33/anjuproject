@@ -39,6 +39,10 @@ class Settings(BaseSettings):
         default="https://luminee-prod1tm1.anjuclinical.com/login",
         description="Luminee Hub / Protocol Summarizer entry (sidebar promo).",
     )
+    integration_settings_path: str = Field(
+        default="data/integration_settings.json",
+        description="JSON file for adapter base URLs and parameters (Integrations page).",
+    )
 
     @property
     def project_root(self) -> Path:
@@ -52,6 +56,12 @@ class Settings(BaseSettings):
 
     def case_store_full_path(self) -> Path:
         p = Path(self.case_store_path)
+        if not p.is_absolute():
+            p = self.project_root / p
+        return p
+
+    def integration_settings_full_path(self) -> Path:
+        p = Path(self.integration_settings_path)
         if not p.is_absolute():
             p = self.project_root / p
         return p

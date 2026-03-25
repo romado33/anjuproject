@@ -26,6 +26,7 @@ def run() -> None:
             str(_APP_DIR / "pages" / "2_Review_case_actions.py"),
             title="Review case actions",
         ),
+        st.Page(str(_APP_DIR / "pages" / "4_Integrations.py"), title="Integrations"),
         st.Page(
             str(_APP_DIR / "pages" / "3_Policy_and_Privacy.py"),
             title="Policy & privacy",

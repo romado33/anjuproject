@@ -27,6 +27,7 @@ anju-case-router/
 │       ├── 0_Home.py                # Landing body (sidebar label: Home)
 │       ├── 1_Case_intake.py        # Demo scenarios + optional custom intake
 │       ├── 2_Review_case_actions.py  # Approvals, AI/privacy expanders, per-action details, execute, audit export
+│       ├── 4_Integrations.py       # Adapter base URLs / parameters (JSON via Settings)
 │       └── 3_Policy_and_Privacy.py # Reference: architecture + compliance markdown
 │
 ├── src/
@@ -76,7 +77,7 @@ When intake runs (`CaseWorkflowEngine.start_case` → `run_agent_pipeline`):
 
 ## Streamlit UI notes
 
-- **Multipage:** `app/Home.py` (and `streamlit_app.py`) call `st.navigation([st.Page(...)])` so sidebar labels are **Home**, **Case intake**, **Review case actions**, **Policy & privacy** — independent of the entry script filename.
+- **Multipage:** `app/Home.py` (and `streamlit_app.py`) call `st.navigation([st.Page(...)])` so sidebar labels are **Home**, **Case intake**, **Review case actions**, **Integrations**, **Policy & privacy** — independent of the entry script filename.
 - **Workflow breadcrumb** (`render_process_breadcrumb`): **Home → Case intake → Review case actions**. Policy is **not** in this strip; see `render_policy_reference_nav` on the Policy page.
 - **Luminee promo:** `render_luminee_sidebar_promo()` in `ui_theme.py`; URLs from `LUMINEE_*` settings (defaults point at public Anju/Luminee pages).
 - **Primary buttons** (teal) and **page links** (outlined) are styled in `ui_theme.py` for contrast.
