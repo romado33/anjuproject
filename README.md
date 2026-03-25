@@ -81,6 +81,8 @@ $env:PYTHONPATH="."
 streamlit run app/Home.py
 ```
 
+`streamlit run app/streamlit_app.py` also works: it is a thin shim that calls the same entrypoint as `Home.py` (useful if an old bookmark or task still points at the previous filename).
+
 **Tests:**
 
 ```powershell

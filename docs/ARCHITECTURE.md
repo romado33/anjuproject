@@ -20,6 +20,7 @@ Routing and action planning are **not** free-form LLM plans; they come from `src
 anju-case-router/
 ├── app/
 │   ├── Home.py                      # Entry / landing (sidebar: “Home”)
+│   ├── streamlit_app.py             # Optional shim → Home.main() (legacy command)
 │   ├── ui_theme.py                # CSS, workflow breadcrumb, policy-page reference nav
 │   └── pages/
 │       ├── 1_Case_intake.py       # Demo scenarios + optional custom intake
