@@ -12,7 +12,12 @@ if str(ROOT) not in sys.path:
 
 import streamlit as st
 
-from app.ui_theme import inject_theme, page_config, render_policy_reference_nav
+from app.ui_theme import (
+    inject_theme,
+    page_config,
+    render_luminee_sidebar_promo,
+    render_policy_reference_nav,
+)
 from config.logging_config import configure_logging
 from config.settings import get_settings
 from src.policy.engine import policy_controls_snapshot
@@ -22,6 +27,7 @@ configure_logging(get_settings().log_level)
 page_config("Policy & privacy")
 inject_theme()
 render_policy_reference_nav()
+render_luminee_sidebar_promo()
 
 PRIVACY_PATH = ROOT / "docs" / "PRIVACY_AND_COMPLIANCE.md"
 

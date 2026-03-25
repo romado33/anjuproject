@@ -12,10 +12,12 @@ Use this script for a **5–10 minute** walkthrough of the Streamlit app. Paths 
 
 | Sidebar label        | File                          | Role |
 |---------------------|-------------------------------|------|
-| **Home**            | `app/Home.py`                 | Landing, links into the workflow |
+| **Home**            | `app/pages/0_Home.py` (via `st.navigation` in `app/Home.py`) | Landing, links into the workflow |
 | **Case intake**     | `app/pages/1_Case_intake.py`  | Run demo scenarios, optional custom text |
 | **Review case actions** | `app/pages/2_Review_case_actions.py` | Approvals, mock execute, audit export |
 | **Policy & privacy** | `app/pages/3_Policy_and_Privacy.py` | Reference: controls and compliance narrative |
+
+Entry scripts **`app/Home.py`** and **`app/streamlit_app.py`** only register pages; they do not hold the landing UI. Sidebar titles come from `st.Page(…, title=…)`, so the first item stays **Home** even when launching `streamlit_app.py`.
 
 **Case workflow** breadcrumb (top of Home, Case intake, Review case actions): **Overview → Case intake → Review case actions** only. **Policy & privacy** is **reference** material (separate header on that page), not a workflow step.
 

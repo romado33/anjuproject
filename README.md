@@ -81,7 +81,7 @@ $env:PYTHONPATH="."
 streamlit run app/Home.py
 ```
 
-`streamlit run app/streamlit_app.py` also works: it is a thin shim that calls the same entrypoint as `Home.py` (useful if an old bookmark or task still points at the previous filename).
+`streamlit run app/streamlit_app.py` runs the **same** multipage app as `Home.py`. Both use `st.navigation` so the first sidebar item is **Home** (not the script file name). Landing content lives in `app/pages/0_Home.py`.
 
 **Tests:**
 
@@ -102,6 +102,8 @@ pytest
 | `CLASSIFICATION_CONFIDENCE_THRESHOLD` | Default `0.65` |
 | `CASE_STORE_PATH` | Case SQLite path (default `data/cases.sqlite3`) |
 | `CHROMA_PERSIST_DIRECTORY` | Vector store directory (default `data/chroma_db`) |
+| `LUMINEE_BOOK_DEMO_URL` | Optional; Luminee “Book a demo” link in sidebar (see `config/settings.py` default) |
+| `LUMINEE_PROTOCOL_SUMMARIZER_URL` | Optional; Protocol Summarizer / Hub link in sidebar |
 
 ---
 

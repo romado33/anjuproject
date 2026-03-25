@@ -31,6 +31,14 @@ class Settings(BaseSettings):
         default=False,
         description="Force keyword-based routing (no OpenAI calls).",
     )
+    luminee_book_demo_url: str = Field(
+        default="https://www.anjusoftware.com/eclinical/luminee/",
+        description="Marketing / demo request URL for Luminee (sidebar promo).",
+    )
+    luminee_protocol_summarizer_url: str = Field(
+        default="https://luminee-prod1tm1.anjuclinical.com/login",
+        description="Luminee Hub / Protocol Summarizer entry (sidebar promo).",
+    )
 
     @property
     def project_root(self) -> Path:

@@ -9,7 +9,7 @@ import streamlit as st
 BreadcrumbStep = Literal["overview", "intake", "review"]
 
 _BREADCRUMB: tuple[tuple[BreadcrumbStep, str, str], ...] = (
-    ("overview", "Home.py", "Overview"),
+    ("overview", "pages/0_Home.py", "Home"),
     ("intake", "pages/1_Case_intake.py", "Case intake"),
     ("review", "pages/2_Review_case_actions.py", "Review case actions"),
 )
@@ -57,14 +57,49 @@ def render_policy_reference_nav() -> None:
     c1, c2 = st.columns([1, 2.2])
     with c1:
         try:
-            st.page_link("Home.py", label="← Overview", use_container_width=True)
+            st.page_link("pages/0_Home.py", label="← Home", use_container_width=True)
         except Exception:
-            st.caption("Overview")
+            st.caption("Home")
     with c2:
         st.caption(
             "**Policy & privacy** — architecture and compliance context. "
             "Open from the sidebar anytime; it is not part of the intake → review steps."
         )
+
+
+def render_luminee_sidebar_promo() -> None:
+    """Anju Luminee + Protocol Summarizer (configurable URLs via settings / .env)."""
+    from config.settings import get_settings
+
+    s = get_settings()
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### Luminee")
+    st.sidebar.markdown("*Build trials in days, not months*")
+    st.sidebar.markdown(
+        "Luminee is an **AI ecosystem** of virtual assistants that ingests protocols and "
+        "auto-creates trial-ready databases, edit checks, and validation artifacts — cutting "
+        "build time by up to **90%**."
+    )
+    st.sidebar.link_button(
+        "Book a demo",
+        s.luminee_book_demo_url,
+        use_container_width=True,
+    )
+    st.sidebar.markdown("#### Introducing the Protocol Summarizer")
+    st.sidebar.markdown(
+        "Designed with **clinical sites** in mind, the Protocol Summarizer transforms complex "
+        "trial protocols into clear, site-focused summaries highlighting operational and "
+        "patient-impact insights. **Reduce review burden. Improve alignment. Move faster.**"
+    )
+    st.sidebar.markdown(
+        "Offered at **no cost** as a commitment to supporting the clinical trial ecosystem — "
+        "available for self sign-up today. Try it **free** through the **Luminee Hub**."
+    )
+    st.sidebar.link_button(
+        "Try the Free Protocol Summarizer",
+        s.luminee_protocol_summarizer_url,
+        use_container_width=True,
+    )
 
 
 def inject_theme() -> None:

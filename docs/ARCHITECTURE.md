@@ -19,11 +19,13 @@ Routing and action planning are **not** free-form LLM plans; they come from `src
 ```
 anju-case-router/
 ├── app/
-│   ├── Home.py                      # Entry / landing (sidebar: “Home”)
-│   ├── streamlit_app.py             # Optional shim → Home.main() (legacy command)
-│   ├── ui_theme.py                # CSS, workflow breadcrumb, policy-page reference nav
+│   ├── Home.py                      # Entry: st.navigation — explicit sidebar titles
+│   ├── streamlit_app.py             # Same behavior as Home.py (legacy filename)
+│   ├── run_multipage.py             # st.Page list: Home, Case intake, Review, Policy
+│   ├── ui_theme.py                  # CSS, breadcrumbs, Luminee promo, policy reference nav
 │   └── pages/
-│       ├── 1_Case_intake.py       # Demo scenarios + optional custom intake
+│       ├── 0_Home.py                # Landing body (sidebar label: Home)
+│       ├── 1_Case_intake.py        # Demo scenarios + optional custom intake
 │       ├── 2_Review_case_actions.py  # Approvals, execute, audit export, advanced metrics
 │       └── 3_Policy_and_Privacy.py # Reference: architecture + compliance markdown
 │
@@ -74,7 +76,9 @@ When intake runs (`CaseWorkflowEngine.start_case` → `run_agent_pipeline`):
 
 ## Streamlit UI notes
 
-- **Workflow breadcrumb** (`render_process_breadcrumb`): **Overview → Case intake → Review case actions**. Policy is **not** in this strip; see `render_policy_reference_nav` on the Policy page.
+- **Multipage:** `app/Home.py` (and `streamlit_app.py`) call `st.navigation([st.Page(...)])` so sidebar labels are **Home**, **Case intake**, **Review case actions**, **Policy & privacy** — independent of the entry script filename.
+- **Workflow breadcrumb** (`render_process_breadcrumb`): **Home → Case intake → Review case actions**. Policy is **not** in this strip; see `render_policy_reference_nav` on the Policy page.
+- **Luminee promo:** `render_luminee_sidebar_promo()` in `ui_theme.py`; URLs from `LUMINEE_*` settings (defaults point at public Anju/Luminee pages).
 - **Primary buttons** (teal) and **page links** (outlined) are styled in `ui_theme.py` for contrast.
 - **Case intake → engine**: `CaseIntake.model_validate(intake.model_dump())` in `start_case` avoids Pydantic `model_type` errors when Streamlit `@st.cache_resource` holds an old module identity after reload.
 - **Approvals**: radio groups use `index=None` so reviewers must explicitly choose; **Execute** is shown only when status is `approved`, not while `pending_approval`.

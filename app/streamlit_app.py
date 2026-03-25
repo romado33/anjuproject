@@ -1,9 +1,4 @@
-"""Backward-compatible Streamlit entry point.
-
-The canonical script is ``app/Home.py`` (sidebar shows **Home**). If your IDE,
-shortcuts, or muscle memory still use ``streamlit run app/streamlit_app.py``,
-this module delegates to the same ``main()`` as ``Home.py``.
-"""
+"""Backward-compatible entry: same navigation as ``Home.py`` (sidebar shows **Home**, not *streamlit app*)."""
 
 from __future__ import annotations
 
@@ -15,6 +10,6 @@ _ROOT = _APP_DIR.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from app.Home import main
+from app.run_multipage import run
 
-main()
+run()

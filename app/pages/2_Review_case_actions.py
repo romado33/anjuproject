@@ -12,7 +12,12 @@ if str(ROOT) not in sys.path:
 
 import streamlit as st
 
-from app.ui_theme import inject_theme, page_config, render_process_breadcrumb
+from app.ui_theme import (
+    inject_theme,
+    page_config,
+    render_luminee_sidebar_promo,
+    render_process_breadcrumb,
+)
 from config.logging_config import configure_logging
 from config.settings import get_settings
 from src.models.case import ApprovalDecision, CaseStatus
@@ -23,6 +28,7 @@ configure_logging(get_settings().log_level)
 page_config("Review case actions")
 inject_theme()
 render_process_breadcrumb(current="review")
+render_luminee_sidebar_promo()
 
 
 @st.cache_resource
