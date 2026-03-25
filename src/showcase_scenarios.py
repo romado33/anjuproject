@@ -1,4 +1,4 @@
-"""Pre-built demo scenarios for the Streamlit demo and UI shortcuts."""
+"""Pre-built sample scenarios for the Streamlit UI and intake shortcuts."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class DemoScenario:
+class ShowcaseScenario:
     key: str
     title: str
     description: str
@@ -14,7 +14,7 @@ class DemoScenario:
 
 
 # Four typical Anju paths shown on Case intake (order preserved).
-DEMO_SHOWCASE_KEYS: tuple[str, ...] = (
+SHOWCASE_KEYS: tuple[str, ...] = (
     "impl_kickoff",
     "compliance_audit",
     "tm_export",
@@ -22,7 +22,7 @@ DEMO_SHOWCASE_KEYS: tuple[str, ...] = (
 )
 
 # Short labels for primary Run buttons on intake.
-DEMO_SHOWCASE_BUTTON_LABELS: dict[str, str] = {
+SHOWCASE_BUTTON_LABELS: dict[str, str] = {
     "impl_kickoff": "Run: IRMS MAX implementation",
     "compliance_audit": "Run: FDA / TrialMaster audit prep",
     "tm_export": "Run: TrialMaster large export",
@@ -30,14 +30,14 @@ DEMO_SHOWCASE_BUTTON_LABELS: dict[str, str] = {
 }
 
 
-def demo_showcase_scenarios() -> list[DemoScenario]:
-    """Scenarios for the main demo grid, in `DEMO_SHOWCASE_KEYS` order."""
+def load_showcase_scenarios() -> list[ShowcaseScenario]:
+    """Scenarios for the main intake grid, in `SHOWCASE_KEYS` order."""
     by_key = {s.key: s for s in SCENARIOS}
-    return [by_key[k] for k in DEMO_SHOWCASE_KEYS if k in by_key]
+    return [by_key[k] for k in SHOWCASE_KEYS if k in by_key]
 
 
-SCENARIOS: list[DemoScenario] = [
-    DemoScenario(
+SCENARIOS: list[ShowcaseScenario] = [
+    ShowcaseScenario(
         key="impl_kickoff",
         title="Implementation kickoff — IRMS MAX",
         description="Professional Services onboarding: routing, actions, checklist",
@@ -47,7 +47,7 @@ SCENARIOS: list[DemoScenario] = [
             "documentation, and training for our medical information team."
         ),
     ),
-    DemoScenario(
+    ShowcaseScenario(
         key="compliance_audit",
         title="Compliance — FDA audit prep",
         description="Quality & compliance: validation evidence and audit trails",
@@ -57,7 +57,7 @@ SCENARIOS: list[DemoScenario] = [
             "audit trails and sign-off records."
         ),
     ),
-    DemoScenario(
+    ShowcaseScenario(
         key="tm_export",
         title="TrialMaster — large export timeout",
         description="EDC performance / engineering escalation pattern",
@@ -67,7 +67,7 @@ SCENARIOS: list[DemoScenario] = [
             "SDTM deliverable for next week. Please advise urgently."
         ),
     ),
-    DemoScenario(
+    ShowcaseScenario(
         key="irms_crm",
         title="IRMS MAX — CRM routing configuration",
         description="Medical information + Veeva/Salesforce CRM integration",
@@ -79,7 +79,7 @@ SCENARIOS: list[DemoScenario] = [
             "content reflects the new TA."
         ),
     ),
-    DemoScenario(
+    ShowcaseScenario(
         key="ta_scan",
         title="TA Scan — feasibility + KOL identification",
         description="Data services scoping: site selection, KOL, competitive intelligence",
@@ -91,7 +91,7 @@ SCENARIOS: list[DemoScenario] = [
             "Please scope effort and timeline."
         ),
     ),
-    DemoScenario(
+    ShowcaseScenario(
         key="cross_product",
         title="Cross-product discrepancy",
         description="Program management + multiple product lines",
@@ -104,7 +104,7 @@ SCENARIOS: list[DemoScenario] = [
 ]
 
 
-def get_scenario(key: str) -> DemoScenario | None:
+def get_scenario(key: str) -> ShowcaseScenario | None:
     for s in SCENARIOS:
         if s.key == key:
             return s

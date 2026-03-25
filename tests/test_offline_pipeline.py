@@ -6,7 +6,7 @@ import os
 
 import pytest
 
-os.environ["OFFLINE_DEMO"] = "true"
+os.environ["OFFLINE_MODE"] = "true"
 os.environ["OPENAI_API_KEY"] = ""
 
 from src.models.case import CaseIntake, CaseStatus, ProductLine

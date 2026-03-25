@@ -27,13 +27,13 @@ class Settings(BaseSettings):
     case_store_path: str = Field(default="data/cases.sqlite3")
     mock_integration_latency_seconds: float = Field(default=0.15, ge=0.0)
     log_level: str = Field(default="INFO")
-    offline_demo: bool = Field(
+    offline_mode: bool = Field(
         default=False,
         description="Force keyword-based routing (no OpenAI calls).",
     )
-    luminee_book_demo_url: str = Field(
+    luminee_booking_url: str = Field(
         default="https://www.anjusoftware.com/eclinical/luminee/",
-        description="Marketing / demo request URL for Luminee (sidebar promo).",
+        description="Luminee product page URL for sidebar promo link.",
     )
     luminee_protocol_summarizer_url: str = Field(
         default="https://luminee-prod1tm1.anjuclinical.com/login",
@@ -68,7 +68,7 @@ class Settings(BaseSettings):
 
     def use_offline_mode(self) -> bool:
         """Offline when forced or when no API key is configured."""
-        return self.offline_demo or not self.openai_api_key.strip()
+        return self.offline_mode or not self.openai_api_key.strip()
 
 
 def get_settings() -> Settings:

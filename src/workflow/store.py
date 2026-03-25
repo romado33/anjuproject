@@ -13,7 +13,7 @@ from src.models.case import CaseRecord
 
 
 class CaseStore:
-    """Idempotent schema init; thread-safe enough for Streamlit single-user demo."""
+    """Idempotent schema init; thread-safe enough for Streamlit single-user sessions."""
 
     def __init__(self, db_path: Path | None = None) -> None:
         s = get_settings()

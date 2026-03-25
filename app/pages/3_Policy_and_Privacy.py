@@ -40,7 +40,7 @@ st.caption(
 st.info(
     "**Lives in the workflow:** these policies are **implemented on every case**. When you use **Case intake**, "
     "this engine decides routing, retrieval, and which downstream actions appear on **Review case actions**. "
-    "This page is reference documentation for that same in-app behavior—not optional or parallel to the demo path."
+    "This page is reference documentation for that same in-app behavior—not optional or parallel to the main workflow."
 )
 
 st.markdown(

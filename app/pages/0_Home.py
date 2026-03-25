@@ -36,9 +36,8 @@ render_luminee_sidebar_promo()
 
 st.title("Anju Internal Automation")
 st.markdown(
-    '<div class="demo-card"><div class="demo-value">Turn one inbound request into a routed, '
-    'approval-gated action plan across internal systems.</div></div>',
-    unsafe_allow_html=True,
+    "AI-enabled routing, human approval for actions, and instant automated execution "
+    "across your internal systems."
 )
 
 st.markdown("### Start")
@@ -64,7 +63,7 @@ with guide_2:
 
 with st.expander("Model & routing settings", expanded=False):
     st.caption(
-        "How this demo classifies requests when an API key is present; optional detail for reviewers."
+        "How the app classifies requests when an API key is present; optional detail for reviewers."
     )
     col1, col2, col3 = st.columns(3)
     with col1:

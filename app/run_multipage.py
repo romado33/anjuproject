@@ -10,10 +10,17 @@ from config.logging_config import configure_logging
 from config.settings import get_settings
 
 _APP_DIR = Path(__file__).resolve().parent
+_ROOT = _APP_DIR.parent
+_ASSETS = _ROOT / "assets"
+_LOGO_PATH = _ASSETS / "anju-software-log.svg"
+_LOGO_FALLBACK = _ASSETS / "anju_wordmark.svg"
 
 
 def run() -> None:
     configure_logging(get_settings().log_level)
+    logo_file = _LOGO_PATH if _LOGO_PATH.is_file() else _LOGO_FALLBACK
+    if logo_file.is_file():
+        st.logo(logo_file, size="large", link="https://www.anjusoftware.com/")
     pages = [
         st.Page(
             str(_APP_DIR / "pages" / "0_Home.py"),

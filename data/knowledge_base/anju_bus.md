@@ -26,7 +26,7 @@ AnjuBUS is the integration layer for real-time and batch connectivity between An
 - **CTMS Master**: Integration with TrialMaster and other EDCs, eTMF document mapping.
 - **TA Scan**: API services for data delivery into customer CTMS/CRM/data lakes.
 
-## AI routing layer (this demo)
+## AI routing layer (this application)
 
 - An **AI routing layer** classifies unstructured customer requests, retrieves relevant product/process context, and proposes adapter invocations.
 - Human approval gates precede writes to systems of record.

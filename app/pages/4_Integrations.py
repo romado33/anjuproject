@@ -53,7 +53,7 @@ def _params_json_valid(text: str) -> tuple[bool, dict[str, str] | None, str]:
 st.title("Integrations")
 st.caption(
     "Define **base URLs** and **parameters** for each downstream adapter. "
-    "The demo still runs **mock** executions; production wiring would read this file via `Settings`."
+    "This app still runs **mock** executions; production wiring would read this file via `Settings`."
 )
 
 st.info(

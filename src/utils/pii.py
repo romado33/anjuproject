@@ -1,10 +1,10 @@
 """
-Best-effort PII / sensitive-data redaction for demo / defense-in-depth before LLM calls.
+Best-effort PII / sensitive-data redaction for defense-in-depth before LLM calls.
 
 Not a HIPAA compliance tool — production systems need DLP, classification,
 legal review, and jurisdiction-specific controls.
 
-Redaction policies are configurable via the `policy` argument (demo-only).
+Redaction policies are configurable via the `policy` argument.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ _EMAIL = re.compile(
     r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b",
     re.IGNORECASE,
 )
-# US-style phone; loose match for demo
+# US-style phone; loose match for intake text
 _PHONE = re.compile(
     r"\b(?:\+?1[-.\s]?)?(?:\(?\d{3}\)?[-.\s]?)\d{3}[-.\s]?\d{4}\b",
 )
@@ -32,8 +32,8 @@ def redact_pii_text(text: str, *, policy: RedactionPolicy = "standard") -> str:
     """
     Mask common direct identifiers and (in strict mode) additional study/protocol tokens.
 
-    Strict mode is intended for life-sciences demos where interviewers may ask about
-    study IDs, trial registry IDs, and site identifiers — not as a replacement for DLP.
+    Strict mode also covers study IDs, trial registry IDs, and site identifiers — not as a
+    replacement for enterprise DLP.
     """
     out = _EMAIL.sub("[EMAIL_REDACTED]", text)
     out = _PHONE.sub("[PHONE_REDACTED]", out)

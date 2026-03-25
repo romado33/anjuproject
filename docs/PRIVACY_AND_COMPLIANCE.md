@@ -1,24 +1,24 @@
-# Privacy, security, and compliance (demo scope)
+# Privacy, security, and compliance (non-production scope)
 
-This repository is a **portfolio / interview demo**. It is **not** certified for HIPAA, HITECH, or any specific jurisdictional framework. Use this document to discuss **how you would harden** a real deployment at a life sciences SaaS company.
+This repository is **not** certified for HIPAA, HITECH, or any specific jurisdictional framework. Use this document to frame **how you would harden** a real deployment at a life sciences SaaS company.
 
-## What this demo assumes
+## What this application assumes
 
-- **Synthetic or anonymized** scenarios in the UI (pre-built demos). Do not paste real patient identifiers or live clinical data into a public demo.
+- **Synthetic or anonymized** scenarios in the UI (pre-built sample paths). Do not paste real patient identifiers or live clinical data into a public or shared environment.
 - **Internal operations** use case (support, PS, finance handoffs)—not direct patient care systems. Even then, ticket text can contain **PHI/PII** depending on customer content; treat inbound text as **potentially sensitive**.
 
 ## United States: HIPAA / PHI (conceptual)
 
 - **HIPAA** applies to **covered entities** and **business associates** handling **PHI** in defined circumstances.
 - A vendor’s **internal** support tools may still process **sensitive** customer content; policies often include **data minimization**, **access controls**, **audit trails**, **encryption in transit/at rest**, **BAA**-governed subprocessors for LLMs, and **retention** limits.
-- This demo **does not** implement a BAA, encryption at rest for all stores, or full access control—it shows **patterns** (approval gates, audit entries, optional redaction before model calls).
+- This build **does not** implement a BAA, encryption at rest for all stores, or full access control—it shows **patterns** (approval gates, audit entries, optional redaction before model calls).
 
 ## Canada: privacy (high level)
 
 - **PIPEDA** (federal) and **provincial** laws (e.g. Québec Law 25, BC PIPA, Alberta PIPA) may apply depending on data type and context.
 - Health information may be subject to **additional provincial health privacy** statutes. Legal counsel determines applicability.
 
-## Controls demonstrated in code (intentionally partial)
+## Controls implemented in code (intentionally partial)
 
 | Control | Where |
 |--------|--------|

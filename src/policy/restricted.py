@@ -1,5 +1,5 @@
 """
-Heuristic detection of content that should not use external LLMs (demo).
+Heuristic detection of content that should not use external LLMs.
 
 Production would use DLP, classifiers, and legal policy — not regex alone.
 """
@@ -34,7 +34,7 @@ _SENSITIVE_PATTERNS: list[tuple[str, str]] = [
 
 
 def analyze_restricted(text: str) -> RestrictedAnalysis:
-    """If any pattern matches, block external LLM path for this case (demo policy)."""
+    """If any pattern matches, block external LLM path for this case."""
     t = text.lower()
     signals: list[str] = []
     for pattern, label in _SENSITIVE_PATTERNS:

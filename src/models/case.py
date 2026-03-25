@@ -69,17 +69,17 @@ class CaseIntake(BaseModel):
     """Raw request from a channel (email, portal, Teams, etc.)."""
 
     request_text: str = Field(..., min_length=10, max_length=50_000)
-    source_channel: str = Field(default="demo_ui", max_length=200)
+    source_channel: str = Field(default="streamlit_ui", max_length=200)
     submitter_name: str | None = Field(default=None, max_length=200)
     submitter_email: str | None = Field(default=None, max_length=320)
     external_reference: str | None = Field(default=None, max_length=500)
     redact_pii: bool = Field(
         default=False,
-        description="If true, mask emails/phones in text sent to LLM/embeddings (demo).",
+        description="If true, mask emails/phones in text sent to LLM/embeddings.",
     )
     redaction_policy: RedactionPolicy = Field(
         default="standard",
-        description="standard: email/phone; strict: also trial/site-style tokens (demo).",
+        description="standard: email/phone; strict: also trial/site-style tokens.",
     )
 
     @field_validator("request_text")
@@ -140,7 +140,7 @@ class ApprovalDecision(BaseModel):
 
     action_id: str
     decision: Literal["approved", "modified", "rejected"]
-    reviewer: str = Field(default="demo_reviewer", max_length=200)
+    reviewer: str = Field(default="sample_reviewer", max_length=200)
     notes: str | None = Field(default=None, max_length=4_000)
     modified_payload: dict[str, Any] | None = None
     decided_at: datetime = Field(default_factory=utc_now)
@@ -162,7 +162,7 @@ class CaseRecord(BaseModel):
     execution_results: list[dict[str, Any]] = Field(default_factory=list)
     audit_trail: list[AuditEntry] = Field(default_factory=list)
     error_message: str | None = None
-    #: Policy / operator controls (demo)
+    #: Policy / operator controls
     restricted_mode: bool = False
     restricted_signals: list[str] = Field(default_factory=list)
     llm_allowed: bool = True

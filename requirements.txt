@@ -1,4 +1,4 @@
-# Anju Internal Case Router — production demo dependencies
+# Anju Internal Case Router — application dependencies
 openai>=1.40.0,<2
 pydantic>=2.7.0,<3
 pydantic-settings>=2.4.0,<3

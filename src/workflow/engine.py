@@ -34,7 +34,7 @@ class CaseWorkflowEngine:
             )
             case.append_audit(
                 "pii_redaction",
-                "Demo: emails/phone-like tokens masked before LLM/embeddings. "
+                "Emails/phone-like tokens masked before LLM/embeddings. "
                 "Original request remains in intake for authorized review.",
                 redacted=True,
             )

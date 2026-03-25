@@ -42,7 +42,7 @@ def main() -> int:
         log.warning(
             "event=seed_skipped",
             reason="offline_mode_no_openai_key",
-            detail="Embeddings require OPENAI_API_KEY. Offline demo can run without RAG.",
+            detail="Embeddings require OPENAI_API_KEY. Offline mode can run without RAG.",
         )
         return 0
 

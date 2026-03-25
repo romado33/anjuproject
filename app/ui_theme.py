@@ -18,7 +18,7 @@ _BREADCRUMB: tuple[tuple[BreadcrumbStep, str, str], ...] = (
 def render_process_breadcrumb(*, current: BreadcrumbStep) -> None:
     """Case workflow only: overview → case intake → review actions (not reference docs)."""
     st.markdown(
-        '<p class="demo-breadcrumb-label">Case workflow</p>',
+        '<p class="workflow-breadcrumb-label">Case workflow</p>',
         unsafe_allow_html=True,
     )
     n = len(_BREADCRUMB)
@@ -29,18 +29,18 @@ def render_process_breadcrumb(*, current: BreadcrumbStep) -> None:
             weights.append(0.12)
     cols = st.columns(weights)
     col_idx = 0
-    for i, (step_key, path, label) in enumerate(_BREADCRUMB):
+    for i, (step_key, _path, label) in enumerate(_BREADCRUMB):
         with cols[col_idx]:
             if step_key == current:
                 st.markdown(
-                    f'<span class="crumb-current">{label}</span>',
+                    f'<span class="crumb-current-text">{label}</span>',
                     unsafe_allow_html=True,
                 )
             else:
-                try:
-                    st.page_link(path, label=label, use_container_width=True)
-                except Exception:
-                    st.caption(label)
+                st.markdown(
+                    f'<span class="crumb-plain">{label}</span>',
+                    unsafe_allow_html=True,
+                )
         col_idx += 1
         if i < n - 1:
             with cols[col_idx]:
@@ -51,7 +51,7 @@ def render_process_breadcrumb(*, current: BreadcrumbStep) -> None:
 def render_policy_reference_nav() -> None:
     """Policy & privacy is reference material — separate from the case workflow breadcrumb."""
     st.markdown(
-        '<p class="demo-reference-nav-label">Reference</p>',
+        '<p class="workflow-reference-nav-label">Reference</p>',
         unsafe_allow_html=True,
     )
     c1, c2 = st.columns([1, 2.2])
@@ -82,8 +82,8 @@ def render_luminee_sidebar_promo() -> None:
         "build time by up to **90%**."
     )
     st.sidebar.link_button(
-        "Book a demo",
-        s.luminee_book_demo_url,
+        "Explore Luminee",
+        s.luminee_booking_url,
         type="primary",
         use_container_width=True,
     )
@@ -141,8 +141,8 @@ def inject_theme() -> None:
             color: var(--anju-navy) !important;
           }
           .stCaption { color: var(--anju-text-muted) !important; }
-          p.demo-breadcrumb-label,
-          .demo-breadcrumb-label {
+          p.workflow-breadcrumb-label,
+          .workflow-breadcrumb-label {
             font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
@@ -150,8 +150,8 @@ def inject_theme() -> None:
             margin: 0.35rem 0 8px 0 !important;
             padding-top: 0.25rem;
           }
-          p.demo-reference-nav-label,
-          .demo-reference-nav-label {
+          p.workflow-reference-nav-label,
+          .workflow-reference-nav-label {
             font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
@@ -159,17 +159,20 @@ def inject_theme() -> None:
             margin: 0.35rem 0 8px 0 !important;
             padding-top: 0.25rem;
           }
-          span.crumb-current {
+          /* Case workflow breadcrumb: text only (use sidebar to change pages) */
+          span.crumb-current-text {
             display: block;
             text-align: center;
             font-weight: 700;
-            font-size: 0.92rem;
+            font-size: 0.95rem;
             color: var(--anju-navy);
-            background: var(--anju-surface-tint);
-            border: 1px solid var(--anju-navy);
-            border-radius: 0.5rem;
-            padding: 0.45rem 0.5rem;
-            box-shadow: 0 1px 0 rgba(37, 99, 235, 0.12);
+          }
+          span.crumb-plain {
+            display: block;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--anju-text-muted);
           }
           span.crumb-sep {
             display: flex;
@@ -179,21 +182,21 @@ def inject_theme() -> None:
             font-size: 1.1rem;
             padding-top: 0.35rem;
           }
-          .demo-card {
+          .workflow-card {
             border: 1px solid var(--anju-border-soft);
             border-radius: 12px;
             padding: 14px 16px;
             margin: 8px 0 14px 0;
             background: var(--anju-surface);
           }
-          .demo-kpi {
+          .workflow-kpi {
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             color: var(--anju-text-muted);
             margin-bottom: 4px;
           }
-          .demo-value {
+          .workflow-value {
             font-size: 1.05rem;
             font-weight: 600;
             color: var(--anju-navy);

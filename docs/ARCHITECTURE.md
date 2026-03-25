@@ -25,7 +25,7 @@ anju-case-router/
 │   ├── ui_theme.py                  # CSS, breadcrumbs, Luminee promo, policy reference nav
 │   └── pages/
 │       ├── 0_Home.py                # Landing body (sidebar label: Home)
-│       ├── 1_Case_intake.py        # Demo scenarios + optional custom intake
+│       ├── 1_Case_intake.py        # Sample scenarios + optional custom intake
 │       ├── 2_Review_case_actions.py  # Approvals, AI/privacy expanders, per-action details, execute, audit export
 │       ├── 4_Integrations.py       # Adapter base URLs / parameters (JSON via Settings)
 │       └── 3_Policy_and_Privacy.py # Reference: architecture + compliance markdown
@@ -49,7 +49,7 @@ anju-case-router/
 │   │   ├── engine.py              # start_case, apply_approvals, execute_approved
 │   │   └── store.py               # SQLite JSON persistence for cases
 │   ├── utils/pii.py
-│   └── demo_scenarios.py          # Curated demo keys + `demo_showcase_scenarios()`
+│   └── showcase_scenarios.py      # Curated showcase keys + `load_showcase_scenarios()`
 │
 ├── data/knowledge_base/          # Markdown corpus for RAG
 ├── config/settings.py            # Pydantic Settings (.env)
@@ -93,7 +93,7 @@ When intake runs (`CaseWorkflowEngine.start_case` → `run_agent_pipeline`):
 | Variable | Purpose |
 |----------|---------|
 | `OPENAI_API_KEY` | Enables LLM classification + embeddings when non-empty |
-| `OFFLINE_DEMO` | `true` forces heuristic path (see `Settings.use_offline_mode`) |
+| `OFFLINE_MODE` | `true` forces heuristic path (see `Settings.use_offline_mode`) |
 | `OPENAI_CHAT_MODEL` | Default `gpt-4o` |
 | `OPENAI_EMBEDDING_MODEL` | Default `text-embedding-3-small` |
 | `CLASSIFICATION_CONFIDENCE_THRESHOLD` | Audit / policy signals (default `0.65`) |
@@ -106,7 +106,7 @@ See `config/settings.py` for exact names (Pydantic reads env vars case-insensiti
 
 ## Tests
 
-Run `pytest` from the repo root (13 tests as of last doc pass): offline pipeline, policy matrix paths, restricted gate, PII redaction, integrations, aggregation helpers. No API key required.
+Run `pytest` from the repo root: offline pipeline, policy matrix paths, restricted gate, PII redaction, integrations, aggregation helpers. No API key required.
 
 ---
 
@@ -115,6 +115,6 @@ Run `pytest` from the repo root (13 tests as of last doc pass): offline pipeline
 | Doc | Content |
 |-----|---------|
 | [README.md](../README.md) | Quick start, feature list, doc index |
-| [DEMO.md](DEMO.md) | Screen-by-screen demo script |
-| [PRIVACY_AND_COMPLIANCE.md](PRIVACY_AND_COMPLIANCE.md) | Demo-scope privacy / compliance talk track |
+| [APP_WALKTHROUGH.md](APP_WALKTHROUGH.md) | Screen-by-screen walkthrough |
+| [PRIVACY_AND_COMPLIANCE.md](PRIVACY_AND_COMPLIANCE.md) | Privacy / compliance narrative (non-production scope) |
 | [WORKFLOW_DISCOVERY.md](WORKFLOW_DISCOVERY.md) | As-is vs to-be friction narrative |

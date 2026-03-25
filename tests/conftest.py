@@ -4,5 +4,5 @@ from __future__ import annotations
 
 import os
 
-os.environ["OFFLINE_DEMO"] = "true"
+os.environ["OFFLINE_MODE"] = "true"
 os.environ["OPENAI_API_KEY"] = ""

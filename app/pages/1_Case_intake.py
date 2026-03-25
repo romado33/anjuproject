@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 import json
 import sys
 from pathlib import Path
@@ -20,11 +21,11 @@ from app.ui_theme import (
 )
 from config.logging_config import configure_logging
 from config.settings import get_settings
-from src.demo_scenarios import (
-    DEMO_SHOWCASE_BUTTON_LABELS,
-    DEMO_SHOWCASE_KEYS,
+from src.showcase_scenarios import (
     SCENARIOS,
-    demo_showcase_scenarios,
+    SHOWCASE_BUTTON_LABELS,
+    SHOWCASE_KEYS,
+    load_showcase_scenarios,
 )
 from src.models.case import CaseIntake
 from src.rag.retriever import chunk_and_embed_kb
@@ -101,8 +102,8 @@ kb_status = ensure_kb()
 settings = get_settings()
 offline = settings.use_offline_mode()
 st.markdown(
-    '<div class="demo-card"><div class="demo-kpi">Next step</div>'
-    '<div class="demo-value">Run a demo scenario, then continue to <strong>Review case actions</strong> '
+    '<div class="workflow-card"><div class="workflow-kpi">Next step</div>'
+    '<div class="workflow-value">Run a sample scenario, then continue to <strong>Review case actions</strong> '
     "to sign off on proposed actions.</div></div>",
     unsafe_allow_html=True,
 )
@@ -116,34 +117,35 @@ if kb_status == "unavailable":
         "Knowledge retrieval is temporarily unavailable in this environment. "
         "You can still run the full policy and approval flow; cases will continue without KB chunks."
     )
-st.markdown("### Demo scenarios")
+st.markdown("### Sample scenarios")
 st.caption(
     "Pick one typical path — each runs the same routing pipeline, then waits for human approval."
 )
-showcase = demo_showcase_scenarios()
+showcase = load_showcase_scenarios()
 row1 = st.columns(2)
 row2 = st.columns(2)
 for idx, scenario in enumerate(showcase):
     col = row1[idx] if idx < 2 else row2[idx - 2]
     with col:
-        st.markdown(
-            f'<div class="demo-card"><div class="demo-kpi">{scenario.title}</div>'
-            f'<div class="demo-value" style="font-weight:400;font-size:0.95rem;">'
-            f"{scenario.description}</div></div>",
-            unsafe_allow_html=True,
-        )
-        btn_label = DEMO_SHOWCASE_BUTTON_LABELS.get(scenario.key, f"Run: {scenario.title}")
-        if st.button(btn_label, type="primary", use_container_width=True, key=f"demo_run_{scenario.key}"):
-            _run_case(
-                request_text=scenario.request_text,
-                submitter="Demo User",
-                submitter_email="demo@example.com",
-                redact=True,
-                redaction_policy="strict",
+        with st.container(border=True):
+            st.markdown(
+                f'<div class="workflow-kpi">{html.escape(scenario.title)}</div>'
+                f'<div class="workflow-value" style="font-weight:400;font-size:0.95rem;">'
+                f"{html.escape(scenario.description)}</div>",
+                unsafe_allow_html=True,
             )
+            btn_label = SHOWCASE_BUTTON_LABELS.get(scenario.key, f"Run: {scenario.title}")
+            if st.button(btn_label, type="primary", use_container_width=True, key=f"showcase_run_{scenario.key}"):
+                _run_case(
+                    request_text=scenario.request_text,
+                    submitter="Sample User",
+                    submitter_email="sample@example.com",
+                    redact=True,
+                    redaction_policy="strict",
+                )
 
 with st.expander("More scenarios (CRM, cross-product)", expanded=False):
-    extra = [s for s in SCENARIOS if s.key not in DEMO_SHOWCASE_KEYS]
+    extra = [s for s in SCENARIOS if s.key not in SHOWCASE_KEYS]
     scenario_labels = {f"{s.title} ({s.key})": s for s in extra}
     if not scenario_labels:
         st.caption("No additional scenarios configured.")
@@ -158,8 +160,8 @@ with st.expander("More scenarios (CRM, cross-product)", expanded=False):
             help="Paste an email, portal ticket, or Teams message body.",
         )
 
-        submitter = st.text_input("Submitter name", value="Demo User")
-        submitter_email = st.text_input("Submitter email", value="demo@example.com")
+        submitter = st.text_input("Submitter name", value="Sample User")
+        submitter_email = st.text_input("Submitter email", value="sample@example.com")
         redact = st.checkbox(
             "Redact identifiers",
             value=True,

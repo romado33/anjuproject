@@ -27,7 +27,7 @@ def test_save_load_roundtrip(tmp_path: Path) -> None:
         base_url="https://example.atlassian.net",
         enabled=True,
         parameters={"project_key": "OPS"},
-        notes="demo",
+        notes="sample",
     )
     save_integration_settings(p, IntegrationSettingsFile(version=1, adapters=merged))
 
@@ -36,7 +36,7 @@ def test_save_load_roundtrip(tmp_path: Path) -> None:
     assert jira.base_url == "https://example.atlassian.net"
     assert jira.enabled is True
     assert jira.parameters == {"project_key": "OPS"}
-    assert jira.notes == "demo"
+    assert jira.notes == "sample"
 
 
 def test_load_merges_partial_file(tmp_path: Path) -> None:

@@ -23,7 +23,7 @@ This content was previously a separate Streamlit page; it is kept here as a refe
 - **Latency** — Time-to-first-action while humans coordinate.
 - **Audit gap** — Decisions live in chat/email unless someone logs them.
 
-## To-be (this demo)
+## To-be (target state)
 
 1. **Single intake** — One structured submission (or pasted email body).
 2. **Classify + optional RAG** — Product/issue/urgency with **internal** KB grounding when useful.
@@ -83,4 +83,4 @@ flowchart LR
     H --> N
 ```
 
-In interviews, tie this to *their* systems: Jira for work, Teams for alerts, NetSuite for services/finance touchpoints.
+Map this to the organization’s systems: Jira for work, Teams for alerts, NetSuite for services/finance touchpoints.

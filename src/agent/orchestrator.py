@@ -65,7 +65,7 @@ def run_agent_pipeline(case: CaseRecord) -> CaseRecord:
         case.llm_allowed = False
         case.append_audit(
             "restricted_gate",
-            "Restricted-content signals detected; external LLM path disabled (demo). "
+            "Restricted-content signals detected; external LLM path disabled. "
             "Deterministic classification and policy actions only.",
             signals=analysis.signals,
         )
@@ -77,7 +77,7 @@ def run_agent_pipeline(case: CaseRecord) -> CaseRecord:
         case.append_audit(
             "pipeline_mode",
             "Running offline deterministic pipeline (no OpenAI). "
-            "Configure OPENAI_API_KEY and disable OFFLINE_DEMO for full agent.",
+            "Configure OPENAI_API_KEY and set OFFLINE_MODE=false for full agent.",
         )
         run_offline_pipeline(case)
         case.status = CaseStatus.PENDING_APPROVAL

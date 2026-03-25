@@ -13,11 +13,11 @@
 | **Pipeline** | LangGraph: classify → conditional RAG → policy route → policy actions (no LLM planner for routing) |
 | **Policy** | `src/policy/engine.py` — when RAG runs, queues, SLAs, which integrations are proposed |
 | **Restricted gate** | Heuristic signals can block external LLM + embeddings; keyword path + same policy |
-| **Modes** | Full (OpenAI) or offline (no API key / `OFFLINE_DEMO`) — shared policy matrix |
+| **Modes** | Full (OpenAI) or offline (no API key / `OFFLINE_MODE`) — shared policy matrix |
 | **RAG** | Chunked Markdown in `data/knowledge_base/`; SQLite + vector retrieval |
 | **UI** | Streamlit: **Home**, **Case intake**, **Review case actions**, **Integrations**, **Policy & privacy** (sidebar) |
 | **UI (sidebar & review)** | Home: mock-adapters line + Luminee promo. Review: decision summary, AI/privacy expanders, per-action details, approvals, audit export. **Integrations:** adapter endpoints JSON |
-| **Demo data** | Four showcase scenarios + extra scenarios in `src/demo_scenarios.py` |
+| **Sample data** | Four showcase scenarios + extra scenarios in `src/showcase_scenarios.py` |
 | **Audit** | `CaseRecord.audit_trail`; JSON export on Review page |
 | **Tests** | `pytest` — no key required |
 
@@ -46,7 +46,8 @@ Low-code tools excel at linear triggers. This repo shows **typed models**, **eva
 | Document | Purpose |
 |----------|---------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | File map, pipeline, config, UI behavior |
-| [docs/PRIVACY_AND_COMPLIANCE.md](docs/PRIVACY_AND_COMPLIANCE.md) | Demo-scope privacy and compliance narrative |
+| [docs/APP_WALKTHROUGH.md](docs/APP_WALKTHROUGH.md) | Screen-by-screen walkthrough |
+| [docs/PRIVACY_AND_COMPLIANCE.md](docs/PRIVACY_AND_COMPLIANCE.md) | Privacy and compliance narrative (non-production scope) |
 | [docs/WORKFLOW_DISCOVERY.md](docs/WORKFLOW_DISCOVERY.md) | As-is vs to-be operational friction |
 
 ---
@@ -87,6 +88,24 @@ streamlit run app/Home.py
 ```powershell
 pytest
 ```
+
+---
+
+## Configuration reference
+
+| Variable | Purpose |
+|----------|---------|
+| `OPENAI_API_KEY` | Enables chat + embedding calls when set |
+| `OFFLINE_MODE` | `true` forces keyword classification path |
+| `OPENAI_CHAT_MODEL` | Default `gpt-4o` |
+| `OPENAI_EMBEDDING_MODEL` | Default `text-embedding-3-small` |
+| `CLASSIFICATION_CONFIDENCE_THRESHOLD` | Default `0.65` |
+| `CASE_STORE_PATH` | Case SQLite path (default `data/cases.sqlite3`) |
+| `CHROMA_PERSIST_DIRECTORY` | Vector store directory (default `data/chroma_db`) |
+| `LUMINEE_BOOKING_URL` | Optional; Luminee product link in sidebar (see `config/settings.py` default) |
+| `LUMINEE_PROTOCOL_SUMMARIZER_URL` | Optional; Protocol Summarizer / Hub link in sidebar |
+| `INTEGRATION_SETTINGS_PATH` | JSON file for adapter base URLs/parameters (default `data/integration_settings.json`; gitignored) |
+
 ---
 
 ## Conceptual flow
@@ -99,4 +118,4 @@ Adapters are **mocked**; the registry pattern mirrors extending a bus (e.g. Anju
 
 ## License
 
-Demo / portfolio project — confirm licensing before production reuse.
+Reference implementation — confirm licensing before production reuse.
