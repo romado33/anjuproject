@@ -91,22 +91,6 @@ pytest
 
 ---
 
-## Configuration reference
-
-| Variable | Purpose |
-|----------|---------|
-| `OPENAI_API_KEY` | Enables chat + embedding calls when set |
-| `OFFLINE_DEMO` | `true` forces keyword classification path |
-| `OPENAI_CHAT_MODEL` | Default `gpt-4o` |
-| `OPENAI_EMBEDDING_MODEL` | Default `text-embedding-3-small` |
-| `CLASSIFICATION_CONFIDENCE_THRESHOLD` | Default `0.65` |
-| `CASE_STORE_PATH` | Case SQLite path (default `data/cases.sqlite3`) |
-| `CHROMA_PERSIST_DIRECTORY` | Vector store directory (default `data/chroma_db`) |
-| `LUMINEE_BOOK_DEMO_URL` | Optional; Luminee “Book a demo” link in sidebar (see `config/settings.py` default) |
-| `LUMINEE_PROTOCOL_SUMMARIZER_URL` | Optional; Protocol Summarizer / Hub link in sidebar |
-
----
-
 ## Conceptual flow
 
 **Inbound text** → optional **PII redaction** for model path → **restricted gate** → **classification** → **RAG (optional)** → **deterministic routing + actions** → **human decisions** → **mock adapter execution** → **audit + export**.
