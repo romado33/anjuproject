@@ -156,6 +156,11 @@ def _render_case_overview_panel(case: CaseRecord) -> None:
         f"**ID** `{case.case_id}` · **Status** `{case.status.value}` · "
         f"**Submitter** {sub}{em_bit} · **Channel** `{ch}`"
     )
+    if case.routing:
+        r = case.routing
+        st.caption(
+            f"**Routing:** {r.target_team} · **Queue** {r.queue_name} · **SLA** {r.sla_hours}h"
+        )
     # Align with pipeline + payloads: `text_for_llm()` is redacted when `redact_pii` was enabled
     # (see `build_actions_from_policy` → Jira/Teams/SFDC description fields).
     body = case.text_for_llm().strip()
@@ -176,38 +181,6 @@ def _render_case_overview_panel(case: CaseRecord) -> None:
             st.caption("Unredacted — handle per your internal policy.")
             st.write(case.intake.request_text.strip())
 
-
-def _render_case_status_banner(case: CaseRecord) -> None:
-    """Next-step / status callout inside the progress panel."""
-    if case.status == CaseStatus.PENDING_APPROVAL:
-        st.info(
-            "Next step: choose **approved**, **modified**, or **rejected** for each action below, "
-            "then click **Submit decisions**."
-        )
-    elif case.status == CaseStatus.APPROVED:
-        st.info(
-            "Next step: click **Execute approved actions (mock)** to run the mock integrations."
-        )
-    elif case.status == CaseStatus.COMPLETED:
-        st.success("Case is complete — see **Audit log & export** below for the full trail.")
-    elif case.status == CaseStatus.REJECTED:
-        st.warning("Case was rejected. Start again from **Case intake** if you want to retry.")
-
-
-def _progress_step(status: CaseStatus) -> int:
-    if status in (
-        CaseStatus.INTAKE,
-        CaseStatus.CLASSIFYING,
-        CaseStatus.RETRIEVING,
-        CaseStatus.ROUTING,
-        CaseStatus.PLANNING,
-    ):
-        return 1
-    if status == CaseStatus.PENDING_APPROVAL:
-        return 2
-    if status in (CaseStatus.APPROVED, CaseStatus.REJECTED):
-        return 3
-    return 4
 
 st.title("Review case actions")
 st.caption("Review proposed actions, record decisions, and run mock downstream integrations.")
@@ -242,35 +215,6 @@ if case is None:
 with st.container(border=True):
     st.caption("CASE OVERVIEW")
     _render_case_overview_panel(case)
-
-step = _progress_step(case.status)
-with st.container(border=True):
-    st.caption("PROGRESS · DECISION SUMMARY · NEXT STEP")
-    st.progress(step / 4)
-    step_labels = ["Intake", "Decision", "Approval", "Complete"]
-    label_line = " -> ".join(
-        [f"**{name}**" if i + 1 == step else name for i, name in enumerate(step_labels)]
-    )
-    st.caption(label_line)
-    _render_case_status_banner(case)
-    if case.routing:
-        st.divider()
-        c1, c2, c3 = st.columns(3)
-        c1.markdown(
-            f'<div class="workflow-card"><div class="workflow-kpi">Owning team</div>'
-            f'<div class="workflow-value">{case.routing.target_team}</div></div>',
-            unsafe_allow_html=True,
-        )
-        c2.markdown(
-            f'<div class="workflow-card"><div class="workflow-kpi">Queue</div>'
-            f'<div class="workflow-value">{case.routing.queue_name}</div></div>',
-            unsafe_allow_html=True,
-        )
-        c3.markdown(
-            f'<div class="workflow-card"><div class="workflow-kpi">SLA</div>'
-            f'<div class="workflow-value">{case.routing.sla_hours}h</div></div>',
-            unsafe_allow_html=True,
-        )
 
 with st.container(border=True):
     st.subheader("Proposed actions & approvals")

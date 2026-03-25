@@ -18,7 +18,10 @@ _BREADCRUMB: tuple[tuple[BreadcrumbStep, str, str], ...] = (
 def render_process_breadcrumb(*, current: BreadcrumbStep) -> None:
     """Case workflow only: overview → case intake → review actions (not reference docs)."""
     st.markdown(
-        '<p class="workflow-breadcrumb-label">Case workflow</p>',
+        '<div class="workflow-breadcrumb-heading">'
+        '<p class="workflow-breadcrumb-label">Case workflow</p>'
+        '<div class="anju-brand-accent-bar" aria-hidden="true"></div>'
+        "</div>",
         unsafe_allow_html=True,
     )
     n = len(_BREADCRUMB)
@@ -107,7 +110,7 @@ def inject_theme() -> None:
     st.markdown(
         """
         <style>
-          /* Anju-aligned palette (navy wordmark, blue→violet gradient accent, cool surfaces) */
+          /* Anju logo palette (assets/anju-software-log.svg) + navy UI surfaces */
           :root {
             --anju-navy: #1B2A4A;
             --anju-navy-hover: #243A5C;
@@ -118,6 +121,24 @@ def inject_theme() -> None:
             --anju-surface: #FAFBFF;
             --anju-surface-tint: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
             --anju-border-soft: #D7DFEA;
+            /* Logo primaries */
+            --anju-logo-blue-deep: #0000AC;
+            --anju-logo-blue-bright: #004FEC;
+            --anju-logo-cyan: #00CAF9;
+            --anju-logo-magenta: #D400C8;
+            --anju-brand-gradient: linear-gradient(
+              90deg,
+              var(--anju-logo-blue-deep) 0%,
+              var(--anju-logo-cyan) 38%,
+              var(--anju-logo-magenta) 68%,
+              var(--anju-logo-blue-bright) 100%
+            );
+            --anju-brand-gradient-soft: linear-gradient(
+              135deg,
+              color-mix(in srgb, var(--anju-logo-blue-deep) 12%, white) 0%,
+              color-mix(in srgb, var(--anju-logo-cyan) 10%, white) 45%,
+              color-mix(in srgb, var(--anju-logo-magenta) 8%, white) 100%
+            );
           }
 
           /* Extra top room so the first row (workflow nav) is not clipped by app chrome */
@@ -131,6 +152,19 @@ def inject_theme() -> None:
           section[data-testid="stMain"] > div {
             padding-top: 0.85rem;
           }
+          /* Subtle brand wash behind main content */
+          section[data-testid="stMain"] {
+            background: radial-gradient(
+              120% 80% at 0% -10%,
+              color-mix(in srgb, var(--anju-logo-blue-bright) 7%, transparent),
+              transparent 55%
+            ),
+            radial-gradient(
+              90% 60% at 100% 0%,
+              color-mix(in srgb, var(--anju-logo-cyan) 5%, transparent),
+              transparent 50%
+            );
+          }
           div[data-testid="stMetricValue"] { font-size: 1.2rem; color: var(--anju-navy) !important; }
           h1 {
             font-weight: 650;
@@ -141,14 +175,25 @@ def inject_theme() -> None:
             color: var(--anju-navy) !important;
           }
           .stCaption { color: var(--anju-text-muted) !important; }
+          .workflow-breadcrumb-heading {
+            margin-bottom: 0;
+          }
           p.workflow-breadcrumb-label,
           .workflow-breadcrumb-label {
             font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             color: var(--anju-text-muted);
-            margin: 0.35rem 0 8px 0 !important;
+            margin: 0.35rem 0 4px 0 !important;
             padding-top: 0.25rem;
+          }
+          .anju-brand-accent-bar {
+            height: 3px;
+            width: min(100%, 320px);
+            border-radius: 2px;
+            background: var(--anju-brand-gradient);
+            margin: 0 0 12px 0;
+            box-shadow: 0 1px 6px color-mix(in srgb, var(--anju-logo-blue-bright) 25%, transparent);
           }
           p.workflow-reference-nav-label,
           .workflow-reference-nav-label {
@@ -165,7 +210,8 @@ def inject_theme() -> None:
             text-align: center;
             font-weight: 700;
             font-size: 0.95rem;
-            color: var(--anju-navy);
+            color: var(--anju-logo-blue-deep);
+            text-shadow: 0 1px 0 color-mix(in srgb, var(--anju-logo-cyan) 28%, transparent);
           }
           span.crumb-plain {
             display: block;
@@ -201,10 +247,14 @@ def inject_theme() -> None:
             font-weight: 600;
             color: var(--anju-navy);
           }
-          /* Primary CTAs: deep navy (Anju header-style), white label */
+          /* Primary CTAs: logo-aligned blue gradient (main); white label */
           div[data-testid="stBaseButton-primary"] button {
-            background-color: var(--anju-navy) !important;
-            border: 1px solid var(--anju-navy-border) !important;
+            background: linear-gradient(
+              135deg,
+              var(--anju-logo-blue-deep) 0%,
+              var(--anju-logo-blue-bright) 100%
+            ) !important;
+            border: 1px solid color-mix(in srgb, var(--anju-logo-blue-deep) 85%, black) !important;
             color: #FFFFFF !important;
             font-weight: 600 !important;
           }
@@ -216,8 +266,12 @@ def inject_theme() -> None:
             -webkit-text-fill-color: #FFFFFF !important;
           }
           div[data-testid="stBaseButton-primary"] button:hover {
-            background-color: var(--anju-navy-hover) !important;
-            border-color: var(--anju-navy) !important;
+            background: linear-gradient(
+              135deg,
+              color-mix(in srgb, var(--anju-logo-blue-deep) 92%, white) 0%,
+              color-mix(in srgb, var(--anju-logo-cyan) 45%, var(--anju-logo-blue-bright)) 100%
+            ) !important;
+            border-color: var(--anju-logo-cyan) !important;
           }
           div[data-testid="stBaseButton-primary"] button:hover p,
           div[data-testid="stBaseButton-primary"] button:hover span {
@@ -225,13 +279,13 @@ def inject_theme() -> None:
             -webkit-text-fill-color: #FFFFFF !important;
           }
           div[data-testid="stBaseButton-primary"] button:focus-visible {
-            box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--anju-royal) !important;
+            box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--anju-logo-cyan) !important;
           }
           /* Page links: airy indigo/lavender fill, navy frame (secondary CTA family) */
           div[data-testid="stPageLink-NavLink"] a,
           div[data-testid="stPageLink"] a {
-            background: linear-gradient(135deg, #EEF2FF 0%, #EDE9FE 100%) !important;
-            border: 2px solid var(--anju-navy) !important;
+            background: var(--anju-brand-gradient-soft) !important;
+            border: 2px solid color-mix(in srgb, var(--anju-logo-blue-deep) 55%, var(--anju-border-soft)) !important;
             color: var(--anju-navy) !important;
             font-weight: 600 !important;
             border-radius: 0.5rem;
@@ -253,19 +307,36 @@ def inject_theme() -> None:
           div[data-testid="stPageLink"] a:hover p,
           div[data-testid="stPageLink-NavLink"] a:hover span,
           div[data-testid="stPageLink"] a:hover span {
-            background: linear-gradient(135deg, #E0E7FF 0%, #DDD6FE 100%) !important;
+            background: linear-gradient(
+              135deg,
+              color-mix(in srgb, var(--anju-logo-cyan) 18%, white) 0%,
+              color-mix(in srgb, var(--anju-logo-magenta) 12%, white) 100%
+            ) !important;
             color: var(--anju-navy) !important;
             -webkit-text-fill-color: var(--anju-navy) !important;
-            border-color: var(--anju-violet) !important;
+            border-color: var(--anju-logo-blue-bright) !important;
           }
-          /* Primary link-style buttons (e.g. st.link_button type=primary in sidebar) */
+          /* Primary link-style buttons (e.g. st.link_button type=primary in sidebar) — full logo spectrum */
           section[data-testid="stSidebar"] div[data-testid="stBaseButton-primary"] button {
-            background: linear-gradient(135deg, var(--anju-royal) 0%, var(--anju-violet) 100%) !important;
-            border: 1px solid #1D4ED8 !important;
+            background: var(--anju-brand-gradient) !important;
+            border: 1px solid var(--anju-logo-blue-deep) !important;
           }
           section[data-testid="stSidebar"] div[data-testid="stBaseButton-primary"] button:hover {
-            background: linear-gradient(135deg, #1D4ED8 0%, #5B21B6 100%) !important;
-            border-color: #5B21B6 !important;
+            background: linear-gradient(
+              90deg,
+              color-mix(in srgb, var(--anju-logo-blue-deep) 88%, white) 0%,
+              color-mix(in srgb, var(--anju-logo-cyan) 70%, var(--anju-logo-blue-bright)) 50%,
+              color-mix(in srgb, var(--anju-logo-magenta) 75%, var(--anju-logo-blue-bright)) 100%
+            ) !important;
+            border-color: var(--anju-logo-cyan) !important;
+          }
+          /* Sidebar: subtle brand tint (follows system / Streamlit theme) */
+          section[data-testid="stSidebar"] {
+            background: linear-gradient(
+              180deg,
+              color-mix(in srgb, var(--anju-logo-blue-bright) 6%, Canvas) 0%,
+              Canvas 32%
+            ) !important;
           }
           /* Tighten first promo heading under native nav (avoid a tall empty band) */
           section[data-testid="stSidebar"] h3 {
