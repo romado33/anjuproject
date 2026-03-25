@@ -108,8 +108,8 @@ st.markdown(
 )
 st.caption(
     "Each scenario run applies **internal policy** automatically (classification, routing, which actions are "
-    "proposed, LLM/RAG and restricted-content gates). **Policy & privacy** in the sidebar explains that model — "
-    "it is what drives the proposals you will approve on **Review case actions**."
+    "proposed, LLM/RAG and restricted-content gates). On **Review case actions**, each case shows how those "
+    "controls shaped the proposals, with a link to the full **Policy & privacy** reference."
 )
 if kb_status == "unavailable":
     st.warning(
@@ -141,15 +141,6 @@ for idx, scenario in enumerate(showcase):
                 redact=True,
                 redaction_policy="strict",
             )
-
-try:
-    st.page_link(
-        "pages/3_Policy_and_Privacy.py",
-        label="Policy & privacy (controls & compliance)",
-        use_container_width=True,
-    )
-except Exception:
-    st.markdown("*See sidebar: Policy & privacy for restricted gate and redaction.*")
 
 with st.expander("More scenarios (CRM, cross-product)", expanded=False):
     extra = [s for s in SCENARIOS if s.key not in DEMO_SHOWCASE_KEYS]

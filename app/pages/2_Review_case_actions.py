@@ -20,8 +20,7 @@ from app.ui_theme import (
 )
 from config.logging_config import configure_logging
 from config.settings import get_settings
-from src.models.case import ApprovalDecision, CaseStatus
-from src.policy.engine import aggregate_operator_metrics, policy_controls_snapshot
+from src.models.case import ApprovalDecision, CaseRecord, CaseStatus, ProposedAction
 from src.workflow.engine import CaseWorkflowEngine
 
 configure_logging(get_settings().log_level)
@@ -40,6 +39,109 @@ engine = get_engine()
 cases = engine.list_cases(limit=80)
 
 _FINAL_DECISIONS = frozenset({"approved", "modified", "rejected"})
+
+
+def _render_concise_case_snapshot(case: CaseRecord) -> None:
+    """Short per-case blurb after AI / privacy explainers (Policy & privacy lives in the sidebar)."""
+    if case.proposed_actions:
+        n = len(case.proposed_actions)
+        systems = sorted({a.target_system for a in case.proposed_actions})
+        n_types = len({a.action_type for a in case.proposed_actions})
+        if len(systems) > 4:
+            sys_str = ", ".join(systems[:3]) + f", +{len(systems) - 3} more"
+        else:
+            sys_str = ", ".join(systems)
+        st.markdown(
+            f"**{n}** proposed actions to **{sys_str}** ({n_types} action types). "
+            "Human approval and mock runs use the **same audit trail**."
+        )
+    else:
+        st.markdown(
+            "No downstream actions on this case; intake, classification, and routing still ran under policy."
+        )
+
+    sig: list[str] = []
+    if case.restricted_mode:
+        sig.append("restricted path (no external LLM)")
+    if case.rag_skipped is True:
+        sig.append("RAG skipped")
+    elif case.rag_skipped is False:
+        sig.append("RAG applied")
+    if not case.llm_allowed:
+        sig.append("LLM off")
+    elif not case.restricted_mode:
+        sig.append("LLM allowed")
+    if sig:
+        st.caption("Case signals: " + " · ".join(sig) + ".")
+
+    st.caption(
+        "Routing and integrations follow the **policy matrix and safety gates**. "
+        "For architecture, retention, and compliance detail, open **Policy & privacy** in the sidebar."
+    )
+
+
+def _render_ai_workflow_expander() -> None:
+    with st.expander("How AI is used in this workflow", expanded=False):
+        st.markdown(
+            """
+**During case intake (before this page)**
+
+- **LLM classification** (OpenAI structured output) runs when an API key is configured, the pipeline is not in **offline** mode, and **restricted** content policy does not block external models. It assigns product, issue type, urgency, and confidence.
+- **Embeddings + RAG** may retrieve KB chunks to inform routing when policy allows; otherwise retrieval is **skipped** and noted on the case.
+- **Team routing, SLA, and proposed actions** are produced by **deterministic policy rules** using that classification (and optional KB context)—not ad-hoc LLM prose for each action.
+- **Offline or restricted intakes** skip external LLM and/or retrieval; classification falls back to **keyword heuristics**.
+
+**On this review screen**
+
+- **No AI**: approvals and edits are human decisions; **Execute** runs **mock adapters** only.
+            """
+        )
+
+
+def _render_privacy_policy_expander(case: CaseRecord) -> None:
+    with st.expander("How privacy policies are applied in this workflow", expanded=False):
+        st.markdown(
+            """
+**At intake**
+
+- **Restricted-content rules** can disable external LLM and embedding retrieval; processing stays on-policy and **audited**.
+- **Redaction** (when enabled on submit) limits what crosses the boundary before classification and retrieval.
+- **RAG** is allowed or skipped based on product/risk policy—not every case hits the knowledge base.
+
+**On this review screen**
+
+- Approvals are **append-only** in the audit log; **mock execution** does not change production data in this demo.
+            """
+        )
+        bits: list[str] = []
+        if case.restricted_mode:
+            bits.append("restricted intake (signals detected)")
+        if case.rag_skipped is True:
+            bits.append("RAG skipped for this case")
+        elif case.rag_skipped is False:
+            bits.append("RAG ran where policy allowed")
+        if bits:
+            st.caption("**This case:** " + " · ".join(bits) + ".")
+
+
+def _proposed_action_details_expander_label(title: str, action_id: str) -> str:
+    t = (title or "").strip() or "Untitled action"
+    if len(t) > 48:
+        t = t[:47] + "…"
+    sid = action_id[:8]
+    return f"View action details — {t} · `{sid}`"
+
+
+def _render_proposed_action_details(action: ProposedAction) -> None:
+    """Rationale and payload for reviewers (policy planner output + adapter-bound JSON)."""
+    with st.expander(_proposed_action_details_expander_label(action.title, action.id), expanded=False):
+        st.markdown("**Policy / planner rationale**")
+        st.write(action.reasoning.strip() if action.reasoning else "*No reasoning recorded.*")
+        st.markdown("**Adapter payload** (shape sent to the downstream / mock integration)")
+        st.json(action.payload)
+        st.caption(
+            f"Action ID `{action.id}` · `{action.action_type.value}` · **{action.target_system}**"
+        )
 
 
 def _progress_step(status: CaseStatus) -> int:
@@ -129,13 +231,18 @@ if case.routing:
         unsafe_allow_html=True,
     )
 
-st.info(
-    "The actions below are proposed by **deterministic policy for this case** (routing matrix, integration "
-    "selection, LLM/RAG gates, restricted mode). **Policy & privacy** in the sidebar describes those controls — "
-    "they are not a separate track; they run automatically on every intake."
-)
-
 st.subheader("Proposed actions & approvals")
+ai_col, priv_col = st.columns(2)
+with ai_col:
+    _render_ai_workflow_expander()
+with priv_col:
+    _render_privacy_policy_expander(case)
+
+_render_concise_case_snapshot(case)
+
+if case.proposed_actions:
+    st.markdown("---")
+
 if not case.proposed_actions:
     st.caption("No actions proposed.")
 elif case.status == CaseStatus.PENDING_APPROVAL:
@@ -158,6 +265,7 @@ elif case.status == CaseStatus.PENDING_APPROVAL:
                 key=f"dec_{case.case_id}_{action.id}",
                 help="Choose one option before submitting.",
             )
+        _render_proposed_action_details(action)
         if st.session_state.get(f"dec_{case.case_id}_{action.id}") == "modified":
             st.text_area(
                 "Modified payload JSON",
@@ -214,6 +322,7 @@ else:
                 st.caption(f"Recorded: **{recorded}**")
             else:
                 st.caption("—")
+        _render_proposed_action_details(action)
 
     st.info(f"Current status: **{case.status.value}**.")
     if case.execution_results:
@@ -284,74 +393,3 @@ if case.audit_trail:
             file_name=f"audit-{case.case_id}.json",
             mime="application/json",
         )
-
-with st.expander("Advanced details", expanded=False):
-    # --- Metrics: pipeline state + operator-style signals ---
-    rag_skipped_n = sum(1 for c in cases if c.rag_skipped)
-    restricted_n = sum(1 for c in cases if c.restricted_mode)
-    pending_n = sum(1 for c in cases if c.status.value == "pending_approval")
-    agg = aggregate_operator_metrics(cases)
-
-    m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Cases stored", len(cases))
-    m2.metric("Pending approval", pending_n)
-    m3.metric("Restricted (policy gate)", restricted_n)
-    m4.metric("RAG skipped (policy)", f"{rag_skipped_n} / {len(cases)}")
-
-    o1, o2, o3, o4 = st.columns(4)
-    o1.metric("Handoffs reduced (est.)", f"{agg['handoffs_reduced_est']:.1f}")
-    o2.metric("No external LLM path", f"{agg['cases_without_external_llm']} / {len(cases)}")
-    o3.metric("No Jira proposed (selective)", f"{agg['cases_no_jira_ticket']} / {len(cases)}")
-    o4.metric("Elevated human review", f"{agg['cases_elevated_review']} / {len(cases)}")
-    st.caption(
-        "Handoffs reduced compares an illustrative pre-automation systems-touch baseline (4.2) to mean proposed actions. "
-        "No-Jira counts cases where policy chose CRM/Teams-only or similar."
-    )
-
-    # --- Policy snapshot (compact) ---
-    snap = policy_controls_snapshot(case)
-    st.markdown("#### Policy snapshot")
-    p1, p2, p3, p4 = st.columns(4)
-    p1.metric("Risk tier", snap["risk_tier"])
-    p2.metric("LLM allowed", "yes" if snap["llm_allowed"] else "no")
-    p3.metric("RAG skipped", "yes" if snap["rag_skipped"] else "no")
-    p4.metric("Elevated review", "yes" if snap["elevated_human_review"] else "no")
-    if case.restricted_mode:
-        st.warning(
-            "Restricted case: external LLM and embedding retrieval were not used for this intake."
-        )
-    for note in snap["policy_notes"]:
-        st.caption(note)
-
-    # --- Intake & classification ---
-    if case.restricted_mode:
-        st.error(
-            "Restricted-content signals detected — deterministic path only. "
-            "See **Policy & privacy** for what triggers this."
-        )
-
-    st.markdown("#### Classification")
-    if case.classification:
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Product", case.classification.product.value)
-        c2.metric("Issue type", case.classification.issue_type.value)
-        c3.metric("Urgency", case.classification.urgency.value)
-        c4.metric("Confidence", f"{case.classification.confidence:.2f}")
-        st.markdown("**Reasoning**")
-        st.write(case.classification.reasoning)
-
-    st.markdown("#### Retrieval")
-    if case.rag_influence_summary:
-        st.info(case.rag_influence_summary)
-    if case.rag_skipped is True:
-        st.caption("RAG was skipped by policy (see audit `rag_skipped`).")
-
-    with st.expander("KB chunks", expanded=False):
-        if case.rag_context:
-            for i, ch in enumerate(case.rag_context, start=1):
-                meta = ch.get("metadata") or {}
-                st.markdown(f"**Chunk {i}** — {meta.get('source_file', 'unknown')}")
-                st.caption(f"distance={ch.get('distance')}")
-                st.write(ch.get("document", ""))
-        else:
-            st.caption("No chunks (offline, policy skip, or empty KB).")

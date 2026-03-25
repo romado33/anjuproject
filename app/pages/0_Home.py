@@ -28,22 +28,10 @@ render_process_breadcrumb(current="overview")
 settings = get_settings()
 offline = settings.use_offline_mode()
 
-st.sidebar.title("Navigation")
-st.sidebar.caption("Internal operations workflow")
-
-if offline:
-    st.sidebar.info(
-        "Offline mode: no `OPENAI_API_KEY`. Keyword classification; retrieval skipped when policy requires API."
-    )
-else:
-    st.sidebar.success(
-        "OpenAI configured — LLM + embeddings enabled where policy allows."
-    )
-
-st.sidebar.markdown("---")
 st.sidebar.markdown(
     "**Mock adapters:** Jira · Teams · Salesforce / Veeva CRM · NetSuite · BambooHR · Wiki checklist"
 )
+st.sidebar.markdown("---")
 render_luminee_sidebar_promo()
 
 st.title("Anju Internal Automation")

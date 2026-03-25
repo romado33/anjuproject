@@ -11,7 +11,7 @@
 | Find friction, automate | `docs/WORKFLOW_DISCOVERY.md`: before/after + pain tags |
 | Integrations (Jira, NetSuite, Teams, CRM) | Mock adapters + registry pattern (AnjuBUS-style story) |
 | Agentic AI + RAG when useful | Full mode: LangGraph + embeddings retrieval; offline: rules |
-| Security / audit / responsible AI | Privacy doc + redaction toggle + approvals + audit JSON |
+| Security / audit / responsible AI | Privacy doc + redaction toggle + approvals + audit JSON + Review-page AI/privacy explainers |
 | Ship working systems | Runnable Streamlit + pytest |
 
 ## Know the org

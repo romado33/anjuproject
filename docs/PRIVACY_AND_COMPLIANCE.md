@@ -23,6 +23,7 @@ This repository is a **portfolio / interview demo**. It is **not** certified for
 | Control | Where |
 |--------|--------|
 | **Human-in-the-loop** before mocked “writes” | Review case actions page (approvals), workflow engine |
+| **In-UI policy narrative** | Review page expanders (AI vs privacy policy); full reference on **Policy & privacy** sidebar page |
 | **Structured audit trail** | `CaseRecord.audit_trail`, export JSON |
 | **Optional PII redaction** before LLM/RAG | `CaseIntake.redact_pii`, `src/utils/pii.py`, `CaseRecord.text_for_llm()` |
 | **Data minimization narrative** | README, this document |

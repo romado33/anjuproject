@@ -72,10 +72,11 @@ def render_luminee_sidebar_promo() -> None:
     from config.settings import get_settings
 
     s = get_settings()
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### Luminee")
-    st.sidebar.markdown("*Build trials in days, not months*")
+    # Single markdown blocks reduce Streamlit sidebar vertical gaps vs many st.sidebar calls.
+    # No leading "---": st.navigation already separates page links from custom sidebar content.
     st.sidebar.markdown(
+        "### Luminee\n\n"
+        "*Build trials in days, not months*\n\n"
         "Luminee is an **AI ecosystem** of virtual assistants that ingests protocols and "
         "auto-creates trial-ready databases, edit checks, and validation artifacts — cutting "
         "build time by up to **90%**."
@@ -83,21 +84,21 @@ def render_luminee_sidebar_promo() -> None:
     st.sidebar.link_button(
         "Book a demo",
         s.luminee_book_demo_url,
+        type="primary",
         use_container_width=True,
     )
-    st.sidebar.markdown("#### Introducing the Protocol Summarizer")
     st.sidebar.markdown(
+        "#### Introducing the Protocol Summarizer\n\n"
         "Designed with **clinical sites** in mind, the Protocol Summarizer transforms complex "
         "trial protocols into clear, site-focused summaries highlighting operational and "
-        "patient-impact insights. **Reduce review burden. Improve alignment. Move faster.**"
-    )
-    st.sidebar.markdown(
+        "patient-impact insights. **Reduce review burden. Improve alignment. Move faster.**\n\n"
         "Offered at **no cost** as a commitment to supporting the clinical trial ecosystem — "
         "available for self sign-up today. Try it **free** through the **Luminee Hub**."
     )
     st.sidebar.link_button(
         "Try the Free Protocol Summarizer",
         s.luminee_protocol_summarizer_url,
+        type="primary",
         use_container_width=True,
     )
 
@@ -106,6 +107,19 @@ def inject_theme() -> None:
     st.markdown(
         """
         <style>
+          /* Anju-aligned palette (navy wordmark, blue→violet gradient accent, cool surfaces) */
+          :root {
+            --anju-navy: #1B2A4A;
+            --anju-navy-hover: #243A5C;
+            --anju-navy-border: #141C33;
+            --anju-royal: #2563EB;
+            --anju-violet: #6D28D9;
+            --anju-text-muted: #5C6578;
+            --anju-surface: #FAFBFF;
+            --anju-surface-tint: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+            --anju-border-soft: #D7DFEA;
+          }
+
           /* Extra top room so the first row (workflow nav) is not clipped by app chrome */
           .block-container {
             padding-top: 2.5rem !important;
@@ -117,15 +131,22 @@ def inject_theme() -> None:
           section[data-testid="stMain"] > div {
             padding-top: 0.85rem;
           }
-          div[data-testid="stMetricValue"] { font-size: 1.2rem; }
-          h1 { font-weight: 650; letter-spacing: -0.02em; }
-          .stCaption { color: rgba(49,51,63,0.75); }
+          div[data-testid="stMetricValue"] { font-size: 1.2rem; color: var(--anju-navy) !important; }
+          h1 {
+            font-weight: 650;
+            letter-spacing: -0.02em;
+            color: var(--anju-navy) !important;
+          }
+          h2, h3 {
+            color: var(--anju-navy) !important;
+          }
+          .stCaption { color: var(--anju-text-muted) !important; }
           p.demo-breadcrumb-label,
           .demo-breadcrumb-label {
             font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            color: #5C6470;
+            color: var(--anju-text-muted);
             margin: 0.35rem 0 8px 0 !important;
             padding-top: 0.25rem;
           }
@@ -134,7 +155,7 @@ def inject_theme() -> None:
             font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            color: #5C6470;
+            color: var(--anju-text-muted);
             margin: 0.35rem 0 8px 0 !important;
             padding-top: 0.25rem;
           }
@@ -143,11 +164,12 @@ def inject_theme() -> None:
             text-align: center;
             font-weight: 700;
             font-size: 0.92rem;
-            color: #063845;
-            background: #E8F4F6;
-            border: 1px solid #0D6B7A;
+            color: var(--anju-navy);
+            background: var(--anju-surface-tint);
+            border: 1px solid var(--anju-navy);
             border-radius: 0.5rem;
             padding: 0.45rem 0.5rem;
+            box-shadow: 0 1px 0 rgba(37, 99, 235, 0.12);
           }
           span.crumb-sep {
             display: flex;
@@ -158,28 +180,28 @@ def inject_theme() -> None:
             padding-top: 0.35rem;
           }
           .demo-card {
-            border: 1px solid #E7EAF1;
+            border: 1px solid var(--anju-border-soft);
             border-radius: 12px;
             padding: 14px 16px;
             margin: 8px 0 14px 0;
-            background: #FAFBFD;
+            background: var(--anju-surface);
           }
           .demo-kpi {
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            color: #5C6470;
+            color: var(--anju-text-muted);
             margin-bottom: 4px;
           }
           .demo-value {
             font-size: 1.05rem;
             font-weight: 600;
-            color: #1F2633;
+            color: var(--anju-navy);
           }
-          /* Solid primary buttons — label text stays white (nested p/span) */
+          /* Primary CTAs: deep navy (Anju header-style), white label */
           div[data-testid="stBaseButton-primary"] button {
-            background-color: #0D6B7A !important;
-            border: 1px solid #0A5A66 !important;
+            background-color: var(--anju-navy) !important;
+            border: 1px solid var(--anju-navy-border) !important;
             color: #FFFFFF !important;
             font-weight: 600 !important;
           }
@@ -191,8 +213,8 @@ def inject_theme() -> None:
             -webkit-text-fill-color: #FFFFFF !important;
           }
           div[data-testid="stBaseButton-primary"] button:hover {
-            background-color: #0A5A66 !important;
-            border-color: #084854 !important;
+            background-color: var(--anju-navy-hover) !important;
+            border-color: var(--anju-navy) !important;
           }
           div[data-testid="stBaseButton-primary"] button:hover p,
           div[data-testid="stBaseButton-primary"] button:hover span {
@@ -200,14 +222,14 @@ def inject_theme() -> None:
             -webkit-text-fill-color: #FFFFFF !important;
           }
           div[data-testid="stBaseButton-primary"] button:focus-visible {
-            box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #0D6B7A !important;
+            box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--anju-royal) !important;
           }
-          /* Page navigation links: outlined / light fill for readable dark text */
+          /* Page links: airy indigo/lavender fill, navy frame (secondary CTA family) */
           div[data-testid="stPageLink-NavLink"] a,
           div[data-testid="stPageLink"] a {
-            background-color: #F0F9FA !important;
-            border: 2px solid #0D6B7A !important;
-            color: #063845 !important;
+            background: linear-gradient(135deg, #EEF2FF 0%, #EDE9FE 100%) !important;
+            border: 2px solid var(--anju-navy) !important;
+            color: var(--anju-navy) !important;
             font-weight: 600 !important;
             border-radius: 0.5rem;
             padding: 0.5rem 0.75rem !important;
@@ -219,8 +241,8 @@ def inject_theme() -> None:
           div[data-testid="stPageLink"] a p,
           div[data-testid="stPageLink-NavLink"] a span,
           div[data-testid="stPageLink"] a span {
-            color: #063845 !important;
-            -webkit-text-fill-color: #063845 !important;
+            color: var(--anju-navy) !important;
+            -webkit-text-fill-color: var(--anju-navy) !important;
           }
           div[data-testid="stPageLink-NavLink"] a:hover,
           div[data-testid="stPageLink"] a:hover,
@@ -228,10 +250,31 @@ def inject_theme() -> None:
           div[data-testid="stPageLink"] a:hover p,
           div[data-testid="stPageLink-NavLink"] a:hover span,
           div[data-testid="stPageLink"] a:hover span {
-            background-color: #D8EFF2 !important;
-            color: #052830 !important;
-            -webkit-text-fill-color: #052830 !important;
-            border-color: #0A5A66 !important;
+            background: linear-gradient(135deg, #E0E7FF 0%, #DDD6FE 100%) !important;
+            color: var(--anju-navy) !important;
+            -webkit-text-fill-color: var(--anju-navy) !important;
+            border-color: var(--anju-violet) !important;
+          }
+          /* Primary link-style buttons (e.g. st.link_button type=primary in sidebar) */
+          section[data-testid="stSidebar"] div[data-testid="stBaseButton-primary"] button {
+            background: linear-gradient(135deg, var(--anju-royal) 0%, var(--anju-violet) 100%) !important;
+            border: 1px solid #1D4ED8 !important;
+          }
+          section[data-testid="stSidebar"] div[data-testid="stBaseButton-primary"] button:hover {
+            background: linear-gradient(135deg, #1D4ED8 0%, #5B21B6 100%) !important;
+            border-color: #5B21B6 !important;
+          }
+          /* Tighten first promo heading under native nav (avoid a tall empty band) */
+          section[data-testid="stSidebar"] h3 {
+            margin-top: 0 !important;
+            margin-bottom: 0.35rem !important;
+          }
+          section[data-testid="stSidebar"] h4 {
+            margin-top: 0.65rem !important;
+            margin-bottom: 0.35rem !important;
+          }
+          section[data-testid="stSidebar"] hr {
+            margin: 0.4rem 0 !important;
           }
         </style>
         """,

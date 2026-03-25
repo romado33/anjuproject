@@ -26,7 +26,7 @@ anju-case-router/
 │   └── pages/
 │       ├── 0_Home.py                # Landing body (sidebar label: Home)
 │       ├── 1_Case_intake.py        # Demo scenarios + optional custom intake
-│       ├── 2_Review_case_actions.py  # Approvals, execute, audit export, advanced metrics
+│       ├── 2_Review_case_actions.py  # Approvals, AI/privacy expanders, per-action details, execute, audit export
 │       └── 3_Policy_and_Privacy.py # Reference: architecture + compliance markdown
 │
 ├── src/
@@ -82,6 +82,8 @@ When intake runs (`CaseWorkflowEngine.start_case` → `run_agent_pipeline`):
 - **Primary buttons** (teal) and **page links** (outlined) are styled in `ui_theme.py` for contrast.
 - **Case intake → engine**: `CaseIntake.model_validate(intake.model_dump())` in `start_case` avoids Pydantic `model_type` errors when Streamlit `@st.cache_resource` holds an old module identity after reload.
 - **Approvals**: radio groups use `index=None` so reviewers must explicitly choose; **Execute** is shown only when status is `approved`, not while `pending_approval`.
+- **Review page layout**: **Decision summary** (if routing) → **Proposed actions & approvals** → paired expanders (AI usage vs privacy policy narrative) → concise per-case snapshot → horizontal rule → action rows with **View action details** (rationale + payload). Full **Policy & privacy** reference is via the sidebar page link, not an extra full-width button on Review.
+- **Home sidebar** (`0_Home.py`): mock-adapters line, divider, Luminee promo; `st.navigation` supplies the page list (avoid an extra `---` immediately under nav to prevent a double horizontal rule).
 
 ---
 

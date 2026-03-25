@@ -15,7 +15,8 @@
 | **Restricted gate** | Heuristic signals can block external LLM + embeddings; keyword path + same policy |
 | **Modes** | Full (OpenAI) or offline (no API key / `OFFLINE_DEMO`) — shared policy matrix |
 | **RAG** | Chunked Markdown in `data/knowledge_base/`; SQLite + vector retrieval |
-| **UI** | Streamlit: **Home**, **Case intake**, **Review case actions**, **Policy & privacy** (reference) |
+| **UI** | Streamlit: **Home**, **Case intake**, **Review case actions**, **Policy & privacy** (sidebar) |
+| **UI (sidebar & review)** | Home: mock-adapters line + Luminee promo. Review: decision summary, AI/privacy expanders, per-action details, approvals, audit export |
 | **Demo data** | Four showcase scenarios + extra scenarios in `src/demo_scenarios.py` |
 | **Audit** | `CaseRecord.audit_trail`; JSON export on Review page |
 | **Tests** | `pytest` — no key required |
