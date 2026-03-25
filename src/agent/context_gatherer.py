@@ -25,9 +25,6 @@ def context_gatherer_node(state: GraphState) -> dict:
         case.status = CaseStatus.ROUTING
         return {"case": case}
 
-    settings = get_settings()
-    retriever = KnowledgeRetriever(settings)
-
     product_hint: str | None = None
     if case.classification.product in (
         ProductLine.TRIALMASTER,
@@ -41,7 +38,9 @@ def context_gatherer_node(state: GraphState) -> dict:
         f"{case.text_for_llm()[:2000]}"
     )
 
+    settings = get_settings()
     try:
+        retriever = KnowledgeRetriever(settings)
         chunks = retriever.retrieve(query, product_hint=product_hint, top_k=6)
     except Exception as exc:
         case.append_audit(

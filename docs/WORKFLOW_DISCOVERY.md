@@ -1,6 +1,6 @@
 # Workflow discovery & friction map (reference)
 
-This content was previously a separate Streamlit page; it is kept here for interview talking points. The live demo uses **three pages**: Case intake, Case run, Policy & privacy.
+This content was previously a separate Streamlit page; it is kept here as a reference narrative. The live app has **Home** plus **Case intake**, **Review case actions**, and **Policy & privacy** (sidebar). Home is the landing page; Policy & privacy is **reference** documentation in the UI, not a step in the case workflow breadcrumb.
 
 ## As-is (illustrative — multi-product SaaS support / ops)
 

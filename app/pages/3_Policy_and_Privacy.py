@@ -12,7 +12,7 @@ if str(ROOT) not in sys.path:
 
 import streamlit as st
 
-from app.ui_theme import inject_theme, page_config
+from app.ui_theme import inject_theme, page_config, render_policy_reference_nav
 from config.logging_config import configure_logging
 from config.settings import get_settings
 from src.policy.engine import policy_controls_snapshot
@@ -21,6 +21,7 @@ from src.workflow.engine import CaseWorkflowEngine
 configure_logging(get_settings().log_level)
 page_config("Policy & privacy")
 inject_theme()
+render_policy_reference_nav()
 
 PRIVACY_PATH = ROOT / "docs" / "PRIVACY_AND_COMPLIANCE.md"
 
@@ -28,6 +29,12 @@ st.title("Policy & privacy")
 st.caption(
     "How **interpretation** (LLM) stays separate from **control** (deterministic policy, "
     "human approval, and restricted-content handling)."
+)
+
+st.info(
+    "**Lives in the workflow:** these policies are **implemented on every case**. When you use **Case intake**, "
+    "this engine decides routing, retrieval, and which downstream actions appear on **Review case actions**. "
+    "This page is reference documentation for that same in-app behavior—not optional or parallel to the demo path."
 )
 
 st.markdown(
@@ -82,4 +89,4 @@ if cases:
             mime="application/json",
         )
 else:
-    st.caption("No cases yet — run **Case intake** first.")
+    st.caption("No cases yet — run a scenario on **Case intake** first.")

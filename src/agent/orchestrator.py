@@ -16,6 +16,25 @@ from src.models.case import CaseRecord, CaseStatus
 from src.policy.restricted import analyze_restricted
 
 
+def _patch_langchain_compat() -> None:
+    """
+    Guard against mixed LangChain installs where `langchain.debug` is missing.
+
+    Some environments have langchain-core/langgraph versions that still read
+    `langchain.debug` and `langchain.verbose` from the top-level package.
+    """
+    try:
+        import langchain  # type: ignore
+
+        if not hasattr(langchain, "debug"):
+            setattr(langchain, "debug", False)
+        if not hasattr(langchain, "verbose"):
+            setattr(langchain, "verbose", False)
+    except Exception:
+        # Keep pipeline resilient; graph can still run in offline mode.
+        return
+
+
 def build_graph() -> StateGraph:
     """Compile classify → conditional RAG → deterministic policy route → policy actions."""
     settings = get_settings()
@@ -64,6 +83,7 @@ def run_agent_pipeline(case: CaseRecord) -> CaseRecord:
         case.status = CaseStatus.PENDING_APPROVAL
         return case
 
+    _patch_langchain_compat()
     app = build_graph()
     out = app.invoke({"case": case})
     updated: CaseRecord = out["case"]

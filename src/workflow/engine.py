@@ -23,6 +23,9 @@ class CaseWorkflowEngine:
         self._registry = get_default_registry()
 
     def start_case(self, intake: CaseIntake) -> CaseRecord:
+        # Rebuild nested model from data so Streamlit script reloads + @st.cache_resource
+        # cannot mix two different CaseIntake class identities (Pydantic model_type error).
+        intake = CaseIntake.model_validate(intake.model_dump(mode="python"))
         case = CaseRecord(intake=intake, status=CaseStatus.INTAKE)
         if intake.redact_pii:
             case.redacted_request_text = redact_pii_text(

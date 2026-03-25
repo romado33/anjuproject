@@ -1,132 +1,112 @@
-# Architecture — how to explain this project in an interview
+# Architecture — Anju Internal Case Router
 
-Use this doc to walk yourself (or an interviewer) through the codebase in about 5 minutes. File references are relative to the project root.
+Technical reference for the repository: layout, runtime pipeline, Streamlit UI, and where to change behavior. Paths are relative to the project root (`anju-case-router/`).
 
-## One sentence
+## One-sentence summary
 
-A Python + Streamlit app that classifies inbound work requests, optionally retrieves internal knowledge, applies **deterministic policy** (not more LLM) for routing and selective actions across Jira/Teams/CRM/NetSuite-style systems, then requires human approval before mock execution — with an audit trail.
+A Python + **Streamlit** app that classifies inbound internal work, optionally retrieves knowledge (**RAG** when **policy** allows), applies **deterministic** routing and **selective** proposed actions (Jira, Teams, CRM, NetSuite, BambooHR, checklist mocks), requires **human approval** per action, then runs **mock** adapter execution with an **append-only audit trail** persisted to SQLite.
 
-## Key design principle
+## Design principle
 
-**LLM interprets ambiguity (classification). Deterministic policy governs everything else (routing, actions, gates).**
+**The LLM interprets ambiguity (classification only). Deterministic policy governs routing, which integrations appear, RAG on/off, and restricted-mode behavior.**
 
-This is the single most important thing to say in the interview. It separates the project from generic "AI agent" demos.
+Routing and action planning are **not** free-form LLM plans; they come from `src/policy/engine.py` and LangGraph nodes that call that engine.
 
-## File map (what lives where)
+---
+
+## Repository layout
 
 ```
 anju-case-router/
-├── app/                        # Streamlit UI (3 pages)
-│   ├── streamlit_app.py        # Landing page
-│   ├── ui_theme.py             # Shared CSS/config
+├── app/
+│   ├── Home.py                      # Entry / landing (sidebar: “Home”)
+│   ├── ui_theme.py                # CSS, workflow breadcrumb, policy-page reference nav
 │   └── pages/
-│       ├── 1_Case_Intake.py    # Submit request, pick scenario, redaction
-│       ├── 2_Case_Run.py       # Pipeline output + policy + approvals + export
-│       └── 3_Policy_and_Privacy.py  # Controls narrative + compliance doc
+│       ├── 1_Case_intake.py       # Demo scenarios + optional custom intake
+│       ├── 2_Review_case_actions.py  # Approvals, execute, audit export, advanced metrics
+│       └── 3_Policy_and_Privacy.py # Reference: architecture + compliance markdown
 │
 ├── src/
-│   ├── agent/                  # Pipeline orchestration
-│   │   ├── orchestrator.py     # Entry point: restricted gate → offline or LangGraph
-│   │   ├── offline.py          # Keyword classification (no API key needed)
-│   │   ├── classifier.py       # OpenAI structured-output classification node
-│   │   ├── context_gatherer.py # Conditional RAG retrieval node
-│   │   ├── policy_nodes.py     # Deterministic routing + action nodes (LangGraph)
-│   │   ├── llm.py              # OpenAI client factory
-│   │   └── state.py            # LangGraph shared state type
-│   │
-│   ├── policy/                 # Deterministic policy engine (the core differentiator)
-│   │   ├── engine.py           # Risk tier, conditional RAG, routing matrix, action matrix,
-│   │   │                       #   KB nudges, operator metrics, policy snapshot
-│   │   └── restricted.py       # Regex-based restricted-content detection
-│   │
-│   ├── models/
-│   │   └── case.py             # Pydantic models: CaseRecord, Classification, etc.
-│   │
-│   ├── rag/
-│   │   ├── retriever.py        # Embedding + SQLite vector retrieval
-│   │   └── vector_store.py     # SQLite + NumPy cosine similarity store
-│   │
-│   ├── integrations/           # Mock adapters (Jira, Teams, Salesforce, NetSuite, etc.)
-│   │   ├── registry.py         # Dispatch pattern (AnjuBUS-style)
-│   │   └── *_client.py         # Individual mock adapters
-│   │
+│   ├── agent/
+│   │   ├── orchestrator.py        # Restricted gate → offline or LangGraph graph
+│   │   ├── offline.py             # Keyword classification (no OpenAI)
+│   │   ├── classifier.py          # OpenAI structured classification
+│   │   ├── context_gatherer.py    # Conditional RAG node
+│   │   ├── policy_nodes.py        # route_from_policy, build_actions_from_policy
+│   │   ├── llm.py
+│   │   └── state.py               # LangGraph state
+│   ├── policy/
+│   │   ├── engine.py              # RAG policy, routing matrix, action matrix, snapshots
+│   │   └── restricted.py        # Restricted-content heuristic gate
+│   ├── models/case.py             # CaseRecord, CaseIntake, Classification, etc.
+│   ├── rag/                       # Chunking, embeddings, SQLite vector store
+│   ├── integrations/            # Mock adapters + registry dispatch
 │   ├── workflow/
-│   │   ├── engine.py           # CaseWorkflowEngine: start → approve → execute
-│   │   └── store.py            # SQLite JSON persistence
-│   │
-│   ├── utils/
-│   │   └── pii.py              # PII redaction (standard + strict modes)
-│   │
-│   └── demo_scenarios.py       # Pre-built intake scenarios for interviews
+│   │   ├── engine.py              # start_case, apply_approvals, execute_approved
+│   │   └── store.py               # SQLite JSON persistence for cases
+│   ├── utils/pii.py
+│   └── demo_scenarios.py          # Curated demo keys + `demo_showcase_scenarios()`
 │
-├── data/knowledge_base/        # Markdown files for RAG (product + process context)
-├── config/settings.py          # Pydantic settings from .env
-├── tests/                      # pytest suite (offline, policy, redaction, integrations)
-├── docs/                       # Interview docs, compliance, workflow discovery
-└── scripts/seed_knowledge_base.py  # One-time KB embedding script
+├── data/knowledge_base/          # Markdown corpus for RAG
+├── config/settings.py            # Pydantic Settings (.env)
+├── tests/                        # pytest (no API key required)
+├── scripts/seed_knowledge_base.py
+└── docs/                         # This folder + compliance source for Policy page
 ```
 
-## Pipeline flow (what happens when you click "Run pipeline")
+---
 
-```
-1. RESTRICTED GATE (orchestrator.py)
-   └─ analyze_restricted() scans text for PHI/AE/trial-ID patterns
-   └─ If triggered → skip LLM entirely, use offline keyword path
+## Pipeline (end-to-end)
 
-2. CLASSIFICATION (classifier.py or offline.py)
-   └─ Online: OpenAI structured output → Classification model
-   └─ Offline: keyword regex → same Classification model
+When intake runs (`CaseWorkflowEngine.start_case` → `run_agent_pipeline`):
 
-3. CONDITIONAL RAG (context_gatherer.py)
-   └─ should_retrieve_context() checks policy rules:
-      - Compliance/implementation → always retrieve
-      - High confidence + training → skip (save cost/latency)
-      - Restricted → skip (no embedding API calls)
+1. **Restricted gate** (`orchestrator` + `analyze_restricted`) — regex-style signals may force **no external LLM/embeddings** and keyword classification.
+2. **Classification** — `classifier.py` (OpenAI structured output) or `offline.py` (keywords) → `Classification`.
+3. **Conditional RAG** (`context_gatherer` + `should_retrieve_context`) — policy may skip retrieval (cost, latency, restricted path).
+4. **Deterministic routing** (`policy_nodes` → `route_from_policy`) — team, queue, SLA; optional KB nudges.
+5. **Selective actions** (`build_actions_from_policy`) — not every ticket gets every integration; matrix depends on product/issue/urgency/tier.
+6. **Persist** — `CaseStore` upserts `CaseRecord`; UI opens **Review case actions** for approvals.
+7. **Human approval** — per-action **approved / modified / rejected**; submit validates all choices.
+8. **Mock execution** — `execute_approved` dispatches only approved/modified actions; each run appends **audit** entries (`adapter_execution`).
 
-4. DETERMINISTIC ROUTING (policy_nodes.py → engine.py)
-   └─ route_from_policy(): classification → team + queue + SLA
-      - Compliance → Quality & Compliance / QNC-Audit-Review
-      - Implementation → Professional Services / PS-{product}-Onboarding
-      - Bug → eClinical Engineering or MI Support (by product)
-   └─ KB nudges: if RAG chunks mention integration/audit → adjust queue/SLA
+---
 
-5. SELECTIVE ACTIONS (policy_nodes.py → engine.py)
-   └─ build_actions_from_policy(): different paths produce different actions
-      - Simple TA data question → CRM + Teams only (NO Jira)
-      - Implementation → Epic + Teams + CRM + NetSuite + BambooHR + checklist
-      - Compliance → Jira + Teams + CRM + audit checklist
-      - Bug → Jira + conditional Teams (only if high/critical)
+## Streamlit UI notes
 
-6. HUMAN APPROVAL (workflow/engine.py → UI)
-   └─ Nothing executes until a human approves each proposed action
+- **Workflow breadcrumb** (`render_process_breadcrumb`): **Overview → Case intake → Review case actions**. Policy is **not** in this strip; see `render_policy_reference_nav` on the Policy page.
+- **Primary buttons** (teal) and **page links** (outlined) are styled in `ui_theme.py` for contrast.
+- **Case intake → engine**: `CaseIntake.model_validate(intake.model_dump())` in `start_case` avoids Pydantic `model_type` errors when Streamlit `@st.cache_resource` holds an old module identity after reload.
+- **Approvals**: radio groups use `index=None` so reviewers must explicitly choose; **Execute** is shown only when status is `approved`, not while `pending_approval`.
 
-7. MOCK EXECUTION (integrations/registry.py)
-   └─ Adapter dispatch → mock payloads logged in audit trail
-```
+---
 
-## What to say about each major component
+## Configuration (environment)
 
-### Policy engine (`src/policy/engine.py`)
-"This is where the real logic lives. After classification, everything is deterministic — routing, actions, risk tier, whether RAG runs. The LLM only interprets; policy controls."
+| Variable | Purpose |
+|----------|---------|
+| `OPENAI_API_KEY` | Enables LLM classification + embeddings when non-empty |
+| `OFFLINE_DEMO` | `true` forces heuristic path (see `Settings.use_offline_mode`) |
+| `OPENAI_CHAT_MODEL` | Default `gpt-4o` |
+| `OPENAI_EMBEDDING_MODEL` | Default `text-embedding-3-small` |
+| `CLASSIFICATION_CONFIDENCE_THRESHOLD` | Audit / policy signals (default `0.65`) |
+| `CASE_STORE_PATH` | SQLite file for case JSON (default `data/cases.sqlite3`) |
+| `CHROMA_PERSIST_DIRECTORY` | Vector artifact dir (default `data/chroma_db`) |
 
-### Restricted gate (`src/policy/restricted.py`)
-"If the text mentions patient IDs, adverse events, trial registry IDs — the system blocks external LLM calls entirely and falls back to keyword classification + policy. In production this would be DLP, not regex."
+See `config/settings.py` for exact names (Pydantic reads env vars case-insensitively).
 
-### Offline mode (`src/agent/offline.py`)
-"The same policy engine runs whether we have an API key or not. Offline uses keyword classification; online uses OpenAI. Routing and actions are identical either way — that's intentional."
+---
 
-### RAG (`src/rag/`)
-"Retrieval is conditional. Policy decides when to skip it (high confidence, training, restricted) and when to require it (compliance, implementation, low confidence). When it runs, KB chunks can nudge routing — e.g. IRMS data question with integration context gets rerouted to MI Integrations."
+## Tests
 
-### Adapters (`src/integrations/`)
-"All mocked, but the pattern is real: a registry dispatches by action type, like extending AnjuBUS with new endpoints. Each adapter logs structured results."
+Run `pytest` from the repo root (13 tests as of last doc pass): offline pipeline, policy matrix paths, restricted gate, PII redaction, integrations, aggregation helpers. No API key required.
 
-### Tests (`tests/`)
-"13 tests cover: offline end-to-end, policy routing (PS path, selective actions, RAG skip, KB nudge), restricted gate, PII redaction (standard + strict), and adapter dispatch. All run without an API key."
+---
 
-## Two-scenario interview demo
+## Further reading
 
-1. **Implementation kickoff — IRMS MAX**: shows PS routing, epic, NetSuite, checklist — "cross-functional automation, not just ticket triage."
-2. **Compliance — FDA audit prep**: shows Q&C routing, audit checklist, restricted gate — "regulated exception path."
-
-See `docs/DEMO_WALKTHROUGH_TALKING_POINTS.md` for exact lines to say on each screen.
+| Doc | Content |
+|-----|---------|
+| [README.md](../README.md) | Quick start, feature list, doc index |
+| [DEMO.md](DEMO.md) | Screen-by-screen demo script |
+| [PRIVACY_AND_COMPLIANCE.md](PRIVACY_AND_COMPLIANCE.md) | Demo-scope privacy / compliance talk track |
+| [WORKFLOW_DISCOVERY.md](WORKFLOW_DISCOVERY.md) | As-is vs to-be friction narrative |

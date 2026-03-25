@@ -1,4 +1,4 @@
-"""Pre-built demo scenarios for interviews and UI shortcuts."""
+"""Pre-built demo scenarios for the Streamlit demo and UI shortcuts."""
 
 from __future__ import annotations
 
@@ -13,11 +13,34 @@ class DemoScenario:
     request_text: str
 
 
+# Four typical Anju paths shown on Case intake (order preserved).
+DEMO_SHOWCASE_KEYS: tuple[str, ...] = (
+    "impl_kickoff",
+    "compliance_audit",
+    "tm_export",
+    "ta_scan",
+)
+
+# Short labels for primary Run buttons on intake.
+DEMO_SHOWCASE_BUTTON_LABELS: dict[str, str] = {
+    "impl_kickoff": "Run: IRMS MAX implementation",
+    "compliance_audit": "Run: FDA / TrialMaster audit prep",
+    "tm_export": "Run: TrialMaster large export",
+    "ta_scan": "Run: TA Scan feasibility + KOL",
+}
+
+
+def demo_showcase_scenarios() -> list[DemoScenario]:
+    """Scenarios for the main demo grid, in `DEMO_SHOWCASE_KEYS` order."""
+    by_key = {s.key: s for s in SCENARIOS}
+    return [by_key[k] for k in DEMO_SHOWCASE_KEYS if k in by_key]
+
+
 SCENARIOS: list[DemoScenario] = [
     DemoScenario(
         key="impl_kickoff",
         title="Implementation kickoff — IRMS MAX",
-        description="PS onboarding: routing, actions, checklist (recommended first in interview)",
+        description="Professional Services onboarding: routing, actions, checklist",
         request_text=(
             "We signed the contract for IRMS MAX last Friday. We need to kick off "
             "implementation including migration from our legacy MI system, validation "
@@ -27,7 +50,7 @@ SCENARIOS: list[DemoScenario] = [
     DemoScenario(
         key="compliance_audit",
         title="Compliance — FDA audit prep",
-        description="Q&C path + restricted-style narrative (recommended second)",
+        description="Quality & compliance: validation evidence and audit trails",
         request_text=(
             "We have an FDA inspection next week. We need validation evidence for "
             "TrialMaster configuration changes made in the last quarter, including "

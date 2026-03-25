@@ -22,10 +22,10 @@ This repository is a **portfolio / interview demo**. It is **not** certified for
 
 | Control | Where |
 |--------|--------|
-| **Human-in-the-loop** before mocked “writes” | Case run page (approvals), workflow engine |
+| **Human-in-the-loop** before mocked “writes” | Review case actions page (approvals), workflow engine |
 | **Structured audit trail** | `CaseRecord.audit_trail`, export JSON |
 | **Optional PII redaction** before LLM/RAG | `CaseIntake.redact_pii`, `src/utils/pii.py`, `CaseRecord.text_for_llm()` |
-| **Data minimization narrative** | README, this doc |=
+| **Data minimization narrative** | README, this document |
 
 ## Disclaimer
 
