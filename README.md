@@ -87,6 +87,7 @@ streamlit run app/Home.py
 ```powershell
 pytest
 ```
+---
 
 ## Conceptual flow
 
